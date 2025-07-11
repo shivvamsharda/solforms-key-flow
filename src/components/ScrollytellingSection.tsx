@@ -112,6 +112,13 @@ const ScrollytellingSection = () => {
             </div>
           )}
 
+          {/* Main Heading - Persistent */}
+          {!currentFrameData.isFinal && (
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-8 leading-tight">
+              Email is full of your personal data
+            </h1>
+          )}
+
           {/* Icon */}
           {currentFrameData.icon && (
             <div className="mb-8">
@@ -125,12 +132,12 @@ const ScrollytellingSection = () => {
             </div>
           )}
 
-          {/* Main Text */}
+          {/* Frame-Specific Text */}
           <h2 
-            className={`text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight ${
+            className={`text-2xl md:text-4xl lg:text-5xl font-bold text-foreground/90 leading-tight ${
               currentFrame === 4 ? 'animate-text-glitch' : ''
             } ${
-              currentFrameData.isFinal ? 'animate-ambient-glow' : ''
+              currentFrameData.isFinal ? 'animate-ambient-glow text-4xl md:text-6xl lg:text-7xl text-foreground' : ''
             }`}
           >
             {currentFrameData.text}
