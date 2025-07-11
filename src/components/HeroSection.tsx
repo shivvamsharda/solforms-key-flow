@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Wallet, ArrowRight, Plus, Type, CheckSquare, Lock, Zap, Shield } from "lucide-react";
-import mobileMockup from "@/assets/mobile-mockup.png";
+import mobileMockup from "/lovable-uploads/a4d4dfe7-fe2e-4199-9a9c-a6b34ae304f3.png";
 
 const HeroSection = () => {
   return (
