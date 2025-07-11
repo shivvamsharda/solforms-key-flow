@@ -89,7 +89,7 @@ const ScrollytellingSection = () => {
           <>
             {/* Main Heading - Always Visible */}
             <div className="text-center mb-16">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-black text-foreground leading-tight tracking-tight">
                 Email is full of your personal data
               </h1>
             </div>
@@ -100,16 +100,18 @@ const ScrollytellingSection = () => {
               const position = getCircularPosition(notificationIndex);
               
               return (
-                <p
+                <div
                   key={notificationIndex}
-                  className="text-base md:text-lg font-bold text-red-500 tracking-wide transition-opacity duration-300"
+                  className="px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg backdrop-blur-sm"
                   style={{
                     ...position,
                     opacity: 1
                   }}
                 >
-                  {notification.text}
-                </p>
+                  <p className="text-base md:text-lg font-display font-bold text-red-500 tracking-wide whitespace-nowrap">
+                    {notification.text}
+                  </p>
+                </div>
               );
             })}
           </>
