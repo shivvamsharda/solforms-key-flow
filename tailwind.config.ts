@@ -131,6 +131,72 @@ export default {
 					'100%': {
 						transform: 'translateX(-50%)'
 					}
+				},
+				'eye-flicker': {
+					'0%, 90%, 100%': {
+						opacity: '1'
+					},
+					'95%': {
+						opacity: '0.3'
+					}
+				},
+				'text-glitch': {
+					'0%, 100%': {
+						transform: 'translateX(0)',
+						filter: 'hue-rotate(0deg)'
+					},
+					'10%': {
+						transform: 'translateX(-2px)',
+						filter: 'hue-rotate(90deg)'
+					},
+					'20%': {
+						transform: 'translateX(2px)',
+						filter: 'hue-rotate(180deg)'
+					},
+					'30%': {
+						transform: 'translateX(-1px)',
+						filter: 'hue-rotate(270deg)'
+					},
+					'40%': {
+						transform: 'translateX(1px)',
+						filter: 'hue-rotate(360deg)'
+					}
+				},
+				'red-pulse': {
+					'0%, 100%': {
+						backgroundColor: 'hsl(240 10% 3.9%)'
+					},
+					'50%': {
+						backgroundColor: 'hsl(0 84.2% 20%)'
+					}
+				},
+				'fragment': {
+					'0%': {
+						transform: 'translateY(0) rotate(0deg)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'translateY(20px) rotate(45deg)',
+						opacity: '0'
+					}
+				},
+				'network-pulse': {
+					'0%, 100%': {
+						opacity: '0.3',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '0.8',
+						transform: 'scale(1.05)'
+					}
+				},
+				'ambient-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 50px hsl(var(--destructive) / 0.3)'
+					},
+					'50%': {
+						boxShadow: '0 0 100px hsl(var(--destructive) / 0.5)'
+					}
 				}
 			},
 			animation: {
@@ -139,7 +205,13 @@ export default {
 				'fade-in': 'fade-in 0.6s ease-out',
 				'float': 'float 3s ease-in-out infinite',
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-				'marquee': 'marquee 30s linear infinite'
+				'marquee': 'marquee 30s linear infinite',
+				'eye-flicker': 'eye-flicker 3s ease-in-out infinite',
+				'text-glitch': 'text-glitch 0.5s ease-in-out',
+				'red-pulse': 'red-pulse 2s ease-in-out',
+				'fragment': 'fragment 1s ease-out forwards',
+				'network-pulse': 'network-pulse 2s ease-in-out infinite',
+				'ambient-glow': 'ambient-glow 3s ease-in-out infinite'
 			}
 		}
 	},
