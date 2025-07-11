@@ -60,15 +60,15 @@ const ScrollytellingSection = () => {
 
   // Pre-defined angles and positions for each notification (calculated once)
   const predefinedPositions = [
-    { angle: 0, radius: 250 },
-    { angle: 40, radius: 200 },
-    { angle: 80, radius: 300 },
-    { angle: 120, radius: 220 },
-    { angle: 160, radius: 280 },
-    { angle: 200, radius: 200 },
-    { angle: 240, radius: 260 },
-    { angle: 280, radius: 220 },
-    { angle: 320, radius: 240 }
+    { angle: 30, radius: 320 },
+    { angle: 70, radius: 280 },
+    { angle: 110, radius: 350 },
+    { angle: 150, radius: 300 },
+    { angle: 190, radius: 330 },
+    { angle: 230, radius: 290 },
+    { angle: 270, radius: 340 },
+    { angle: 310, radius: 300 },
+    { angle: 350, radius: 320 }
   ];
   
   // Helper function to get circular position using trigonometry
@@ -96,7 +96,7 @@ const ScrollytellingSection = () => {
     <section 
       ref={sectionRef}
       className="relative bg-black transition-all duration-1000"
-      style={{ height: `${(notifications.length + 1) * 100}vh` }}
+      style={{ height: `${(notifications.length + 1) * 60}vh` }}
     >
       <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
         <div className="relative w-full max-w-6xl mx-auto px-6">
@@ -119,7 +119,7 @@ const ScrollytellingSection = () => {
                 return (
                   <p
                     key={notificationIndex}
-                    className="text-sm md:text-base font-medium text-foreground tracking-wide transition-opacity duration-300"
+                    className="text-base md:text-lg font-bold text-foreground tracking-wide transition-opacity duration-300"
                     style={{
                       ...position,
                       opacity: 1
