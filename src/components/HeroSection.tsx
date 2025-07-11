@@ -165,13 +165,13 @@ const HeroSection = () => {
               </div>
             </div>
             
-            {/* Mobile Mockup */}
-            <div className="absolute -right-16 top-8 hidden xl:block animate-float delay-300">
+            {/* Mobile Mockup - positioned on left side */}
+            <div className="absolute -left-20 top-4 hidden lg:block animate-float delay-300 z-0">
               <div className="relative">
                 <img 
                   src={mobileMockup} 
                   alt="SolForms mobile app showing encrypted form interface" 
-                  className="w-48 h-auto transform rotate-12 drop-shadow-2xl"
+                  className="w-40 h-auto transform -rotate-12 drop-shadow-2xl opacity-80"
                 />
                 {/* Glow effect behind mobile */}
                 <div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-xl -z-10"></div>
