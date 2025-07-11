@@ -17,19 +17,16 @@ const EmailPrivacyRevelationSection = () => {
           <div className="relative text-center max-w-5xl mx-auto">
             <p className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-medium leading-[1.4] text-gray-100 tracking-tight">
               Unlike Big Tech form platforms like{" "}
-              <span className="inline-flex items-center gap-3 text-yellow-400 font-semibold">
+              <span className="text-yellow-400 font-semibold">
                 Google Forms
-                <span className="w-6 h-6 bg-yellow-400 rounded-sm flex-shrink-0"></span>
               </span>
               ,{" "}
-              <span className="inline-flex items-center gap-3 text-blue-400 font-semibold">
+              <span className="text-blue-400 font-semibold">
                 Microsoft Forms
-                <span className="w-6 h-6 bg-blue-400 rounded-sm flex-shrink-0"></span>
               </span>
               , and{" "}
-              <span className="inline-flex items-center gap-3 text-orange-400 font-semibold">
+              <span className="text-orange-400 font-semibold">
                 Typeform
-                <span className="w-6 h-6 bg-orange-400 rounded-sm flex-shrink-0"></span>
               </span>
               ,
               <br className="hidden sm:block" />
