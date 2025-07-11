@@ -7,42 +7,15 @@ const ScrollytellingSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const notifications = [
-    {
-      text: "PERSONAL PHOTOS",
-      position: "top-left-far"
-    },
-    {
-      text: "BANK CHECKS",
-      position: "top-right-far"
-    },
-    {
-      text: "MEETINGS",
-      position: "left-upper"
-    },
-    {
-      text: "ADDRESSES",
-      position: "right-upper"
-    },
-    {
-      text: "COMMERCIAL SECRETS",
-      position: "left-lower"
-    },
-    {
-      text: "CONTRACTS",
-      position: "right-lower"
-    },
-    {
-      text: "DOCUMENTS",
-      position: "bottom-left-far"
-    },
-    {
-      text: "PASSWORD RESET LINKS",
-      position: "bottom-right-far"
-    },
-    {
-      text: "LINKS TO CLOUD FILES",
-      position: "bottom-center-far"
-    }
+    { text: "PERSONAL PHOTOS" },
+    { text: "BANK CHECKS" },
+    { text: "MEETINGS" },
+    { text: "ADDRESSES" },
+    { text: "COMMERCIAL SECRETS" },
+    { text: "CONTRACTS" },
+    { text: "DOCUMENTS" },
+    { text: "PASSWORD RESET LINKS" },
+    { text: "LINKS TO CLOUD FILES" }
   ];
 
   const finalFrame = {
@@ -85,30 +58,26 @@ const ScrollytellingSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [notifications.length]);
 
-  // Helper function to get notification position styles
-  const getNotificationPosition = (position: string, index: number) => {
-    switch (position) {
-      case "top-left-far":
-        return `absolute top-12 left-4 md:left-8 transform animate-fade-in`;
-      case "top-right-far":
-        return `absolute top-12 right-4 md:right-8 transform animate-fade-in`;
-      case "left-upper":
-        return `absolute top-1/3 left-4 md:left-8 transform animate-fade-in`;
-      case "right-upper":
-        return `absolute top-1/3 right-4 md:right-8 transform animate-fade-in`;
-      case "left-lower":
-        return `absolute top-2/3 left-4 md:left-8 transform animate-fade-in`;
-      case "right-lower":
-        return `absolute top-2/3 right-4 md:right-8 transform animate-fade-in`;
-      case "bottom-left-far":
-        return `absolute bottom-12 left-4 md:left-8 transform animate-fade-in`;
-      case "bottom-right-far":
-        return `absolute bottom-12 right-4 md:right-8 transform animate-fade-in`;
-      case "bottom-center-far":
-        return `absolute bottom-12 left-1/2 -translate-x-1/2 transform animate-fade-in`;
-      default:
-        return `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform animate-fade-in`;
-    }
+  // Helper function to get circular position using trigonometry
+  const getCircularPosition = (index: number) => {
+    const totalNotifications = notifications.length;
+    const angle = (index * 360) / totalNotifications; // Distribute evenly around 360°
+    const radius = 200 + (index % 3) * 50; // Vary radius: 200px, 250px, 300px
+    const radiusResponsive = `${radius}px`; // Base radius
+    
+    // Convert angle to radians
+    const radian = (angle * Math.PI) / 180;
+    
+    // Calculate x and y offsets using trigonometry
+    const x = Math.cos(radian) * radius;
+    const y = Math.sin(radian) * radius;
+    
+    return {
+      transform: `translate(${x}px, ${y}px)`,
+      position: 'absolute' as const,
+      top: '50%',
+      left: '50%'
+    };
   };
 
   const showFinalFrame = currentScrollState === 'final' && isActive;
@@ -132,25 +101,22 @@ const ScrollytellingSection = () => {
                 </h1>
               </div>
 
-              {/* Notification Pop-ups */}
+              {/* Notification Pop-ups - Plain text distributed in 360 degrees */}
               {visibleNotifications.map((notificationIndex) => {
                 const notification = notifications[notificationIndex];
+                const position = getCircularPosition(notificationIndex);
                 
                 return (
-                  <div
+                  <p
                     key={notificationIndex}
-                    className={`${getNotificationPosition(notification.position, notificationIndex)} 
-                      bg-muted/80 border border-muted-foreground/20 p-3 md:p-4 
-                      max-w-[200px] md:max-w-[250px] transition-all duration-300
-                      animate-scale-in`}
+                    className="text-sm md:text-base font-medium text-foreground tracking-wide animate-fade-in"
                     style={{
+                      ...position,
                       animationDelay: `${notificationIndex * 200}ms`
                     }}
                   >
-                    <p className="text-xs md:text-sm font-medium text-foreground tracking-wide">
-                      {notification.text}
-                    </p>
-                  </div>
+                    {notification.text}
+                  </p>
                 );
               })}
             </>
