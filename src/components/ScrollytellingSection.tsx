@@ -2,49 +2,42 @@ import { useEffect, useState, useRef } from "react";
 import { Eye, Mail, Shield, Network, AlertTriangle } from "lucide-react";
 
 const ScrollytellingSection = () => {
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const [visibleNotifications, setVisibleNotifications] = useState<number[]>([]);
   const [isActive, setIsActive] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const frames = [
+  const notifications = [
     {
       text: "Tracking pixels know when you open mail.",
       icon: Eye,
-      animation: "eye-flicker",
-      background: "bg-black"
+      position: "top-left"
     },
     {
       text: "Phishing links steal your identity.",
       icon: Shield,
-      animation: "red-pulse",
-      background: "bg-black animate-red-pulse"
+      position: "top-right"
     },
     {
       text: "Your inbox is a honeypot for attackers.",
       icon: Mail,
-      animation: "fragment",
-      background: "bg-black"
+      position: "middle-left"
     },
     {
       text: "Metadata exposes who you talk to — and when.",
       icon: Network,
-      animation: "network-pulse",
-      background: "bg-black"
+      position: "middle-right"
     },
     {
       text: "Password resets. Breach portals. Surveillance defaults.",
       icon: AlertTriangle,
-      animation: "text-glitch",
-      background: "bg-black"
-    },
-    {
-      text: "Forms built on email aren't private. They're just convenient surveillance.",
-      icon: null,
-      animation: "ambient-glow",
-      background: "bg-black",
-      isFinal: true
+      position: "bottom-center"
     }
   ];
+
+  const finalFrame = {
+    text: "Forms built on email aren't private. They're just convenient surveillance.",
+    isFinal: true
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,101 +45,115 @@ const ScrollytellingSection = () => {
 
       const rect = sectionRef.current.getBoundingClientRect();
       const sectionHeight = rect.height;
-      const frameHeight = sectionHeight / frames.length;
+      const totalFrames = notifications.length + 1; // notifications + final frame
+      const frameHeight = sectionHeight / totalFrames;
       
       // Check if section is in viewport
       const isInViewport = rect.top <= window.innerHeight && rect.bottom >= 0;
       setIsActive(isInViewport);
 
       if (isInViewport) {
-        // Calculate which frame should be active
+        // Calculate how many notifications should be visible
         const scrollProgress = Math.abs(rect.top);
         const frameIndex = Math.floor(scrollProgress / frameHeight);
-        const clampedIndex = Math.max(0, Math.min(frameIndex, frames.length - 1));
-        setCurrentFrame(clampedIndex);
+        const clampedIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
+        
+        // Update visible notifications progressively
+        if (clampedIndex < notifications.length) {
+          const newVisible = Array.from({ length: clampedIndex + 1 }, (_, i) => i);
+          setVisibleNotifications(newVisible);
+        } else {
+          // Show final frame (all notifications disappear)
+          setVisibleNotifications([]);
+        }
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // Initial check
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [frames.length]);
+  }, [notifications.length]);
 
-  const currentFrameData = frames[currentFrame];
+  // Helper function to get notification position styles
+  const getNotificationPosition = (position: string, index: number) => {
+    const baseDelay = index * 200; // Stagger animations
+    
+    switch (position) {
+      case "top-left":
+        return `absolute top-16 left-8 md:left-16 transform animate-fade-in animate-delay-${baseDelay}`;
+      case "top-right":
+        return `absolute top-16 right-8 md:right-16 transform animate-fade-in animate-delay-${baseDelay}`;
+      case "middle-left":
+        return `absolute top-1/2 left-8 md:left-16 -translate-y-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+      case "middle-right":
+        return `absolute top-1/2 right-8 md:right-16 -translate-y-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+      case "bottom-center":
+        return `absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+      default:
+        return `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+    }
+  };
+
+  const showFinalFrame = visibleNotifications.length === 0 && isActive;
 
   return (
     <section 
       ref={sectionRef}
-      className={`relative transition-all duration-1000 ${currentFrameData.background}`}
-      style={{ height: `${frames.length * 100}vh` }}
+      className="relative bg-black transition-all duration-1000"
+      style={{ height: `${(notifications.length + 1) * 100}vh` }}
     >
       <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
-        <div className="relative w-full max-w-6xl mx-auto px-6 text-center">
-          {/* Background Effects */}
-          {currentFrame === 1 && (
-            <div className="absolute inset-0 opacity-20">
-              <div className="w-64 h-32 mx-auto mt-32 border border-destructive/50 rounded-lg animate-text-glitch">
-                <div className="p-4 space-y-2">
-                  <div className="h-4 bg-destructive/30 rounded animate-pulse"></div>
-                  <div className="h-4 bg-destructive/30 rounded animate-pulse delay-100"></div>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="relative w-full max-w-6xl mx-auto px-6">
           
-          {currentFrame === 3 && (
-            <div className="absolute inset-0 opacity-20">
-              <svg className="w-full h-full" viewBox="0 0 800 600">
-                <g className="animate-network-pulse">
-                  <circle cx="200" cy="150" r="4" fill="hsl(var(--destructive))" />
-                  <circle cx="400" cy="100" r="4" fill="hsl(var(--destructive))" />
-                  <circle cx="600" cy="200" r="4" fill="hsl(var(--destructive))" />
-                  <circle cx="300" cy="300" r="4" fill="hsl(var(--destructive))" />
-                  <circle cx="500" cy="350" r="4" fill="hsl(var(--destructive))" />
-                  <line x1="200" y1="150" x2="400" y2="100" stroke="hsl(var(--destructive))" strokeWidth="1" />
-                  <line x1="400" y1="100" x2="600" y2="200" stroke="hsl(var(--destructive))" strokeWidth="1" />
-                  <line x1="300" y1="300" x2="500" y2="350" stroke="hsl(var(--destructive))" strokeWidth="1" />
-                  <line x1="200" y1="150" x2="300" y2="300" stroke="hsl(var(--destructive))" strokeWidth="1" />
-                </g>
-              </svg>
-            </div>
-          )}
+          {/* Main Content */}
+          {!showFinalFrame ? (
+            <>
+              {/* Main Heading - Always Visible */}
+              <div className="text-center mb-16">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                  Email is full of your personal data
+                </h1>
+              </div>
 
-          {/* Main Heading - Persistent */}
-          {!currentFrameData.isFinal && (
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-8 leading-tight">
-              Email is full of your personal data
-            </h1>
-          )}
-
-          {/* Icon */}
-          {currentFrameData.icon && (
-            <div className="mb-8">
-              <currentFrameData.icon 
-                className={`w-16 h-16 mx-auto text-destructive ${
-                  currentFrame === 0 ? 'animate-eye-flicker' :
-                  currentFrame === 2 ? 'animate-fragment' :
-                  ''
-                }`} 
-              />
-            </div>
-          )}
-
-          {/* Frame-Specific Text */}
-          <h2 
-            className={`text-2xl md:text-4xl lg:text-5xl font-bold text-foreground/90 leading-tight ${
-              currentFrame === 4 ? 'animate-text-glitch' : ''
-            } ${
-              currentFrameData.isFinal ? 'animate-ambient-glow text-4xl md:text-6xl lg:text-7xl text-foreground' : ''
-            }`}
-          >
-            {currentFrameData.text}
-          </h2>
-
-          {/* Ambient effects for final frame */}
-          {currentFrameData.isFinal && (
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-destructive/10 rounded-full blur-3xl animate-ambient-glow"></div>
+              {/* Notification Pop-ups */}
+              {visibleNotifications.map((notificationIndex) => {
+                const notification = notifications[notificationIndex];
+                const IconComponent = notification.icon;
+                
+                return (
+                  <div
+                    key={notificationIndex}
+                    className={`${getNotificationPosition(notification.position, notificationIndex)} 
+                      bg-background/10 backdrop-blur-sm border border-destructive/30 rounded-lg p-4 
+                      shadow-lg max-w-xs w-full hover:bg-background/20 transition-all duration-300
+                      animate-scale-in`}
+                    style={{
+                      animationDelay: `${notificationIndex * 200}ms`
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0">
+                        <IconComponent className="w-5 h-5 text-destructive mt-0.5" />
+                      </div>
+                      <p className="text-sm text-foreground/90 leading-relaxed">
+                        {notification.text}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          ) : (
+            /* Final Frame */
+            <div className="text-center">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight animate-ambient-glow">
+                {finalFrame.text}
+              </h2>
+              
+              {/* Ambient effects for final frame */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-destructive/10 rounded-full blur-3xl animate-ambient-glow"></div>
+              </div>
             </div>
           )}
         </div>
