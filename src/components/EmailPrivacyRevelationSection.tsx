@@ -18,11 +18,11 @@ const EmailPrivacyRevelationSection = () => {
             <p className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-medium leading-[1.4] text-gray-100 tracking-tight">
               Unlike Big Tech form platforms like{" "}
               <span className="text-yellow-400 font-semibold">
-                Google Forms
+                Google
               </span>
               ,{" "}
               <span className="text-blue-400 font-semibold">
-                Microsoft Forms
+                Microsoft
               </span>
               , and{" "}
               <span className="text-orange-400 font-semibold">
