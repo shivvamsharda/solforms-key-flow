@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ScrollytellingSection from "@/components/ScrollytellingSection";
+import EmailPrivacyRevelationSection from "@/components/EmailPrivacyRevelationSection";
 import SolutionSection from "@/components/SolutionSection";
 import FeaturesGrid from "@/components/FeaturesGrid";
 import UseCasesSection from "@/components/UseCasesSection";
@@ -16,6 +17,7 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <ScrollytellingSection />
+      <EmailPrivacyRevelationSection />
       <SolutionSection />
       <FeaturesGrid />
       <UseCasesSection />
