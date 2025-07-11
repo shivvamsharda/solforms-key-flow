@@ -3,6 +3,7 @@ import { Eye, Mail, Shield, Network, AlertTriangle } from "lucide-react";
 
 const ScrollytellingSection = () => {
   const [visibleNotifications, setVisibleNotifications] = useState<number[]>([]);
+  const [currentScrollState, setCurrentScrollState] = useState<'notifications' | 'final'>('notifications');
   const [isActive, setIsActive] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -45,32 +46,32 @@ const ScrollytellingSection = () => {
 
       const rect = sectionRef.current.getBoundingClientRect();
       const sectionHeight = rect.height;
-      const totalFrames = notifications.length + 1; // notifications + final frame
+      const totalFrames = notifications.length + 1;
       const frameHeight = sectionHeight / totalFrames;
       
-      // Check if section is in viewport
       const isInViewport = rect.top <= window.innerHeight && rect.bottom >= 0;
       setIsActive(isInViewport);
 
       if (isInViewport) {
-        // Calculate how many notifications should be visible
         const scrollProgress = Math.abs(rect.top);
         const frameIndex = Math.floor(scrollProgress / frameHeight);
         const clampedIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
         
-        // Update visible notifications progressively
-        if (clampedIndex < notifications.length) {
+        if (clampedIndex >= notifications.length) {
+          // Final frame
+          setCurrentScrollState('final');
+          setVisibleNotifications([]);
+        } else {
+          // Show notifications
+          setCurrentScrollState('notifications');
           const newVisible = Array.from({ length: clampedIndex + 1 }, (_, i) => i);
           setVisibleNotifications(newVisible);
-        } else {
-          // Show final frame (all notifications disappear)
-          setVisibleNotifications([]);
         }
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [notifications.length]);
 
@@ -80,21 +81,21 @@ const ScrollytellingSection = () => {
     
     switch (position) {
       case "top-left":
-        return `absolute top-16 left-8 md:left-16 transform animate-fade-in animate-delay-${baseDelay}`;
+        return `absolute top-16 left-8 md:left-16 transform animate-fade-in`;
       case "top-right":
-        return `absolute top-16 right-8 md:right-16 transform animate-fade-in animate-delay-${baseDelay}`;
+        return `absolute top-16 right-8 md:right-16 transform animate-fade-in`;
       case "middle-left":
-        return `absolute top-1/2 left-8 md:left-16 -translate-y-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+        return `absolute top-1/2 left-8 md:left-16 -translate-y-1/2 transform animate-fade-in`;
       case "middle-right":
-        return `absolute top-1/2 right-8 md:right-16 -translate-y-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+        return `absolute top-1/2 right-8 md:right-16 -translate-y-1/2 transform animate-fade-in`;
       case "bottom-center":
-        return `absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+        return `absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-fade-in`;
       default:
-        return `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform animate-fade-in animate-delay-${baseDelay}`;
+        return `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform animate-fade-in`;
     }
   };
 
-  const showFinalFrame = visibleNotifications.length === 0 && isActive;
+  const showFinalFrame = currentScrollState === 'final' && isActive;
 
   return (
     <section 
