@@ -58,12 +58,13 @@ const ScrollytellingSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [notifications.length]);
 
+  // Pre-defined angles for each notification (fixed positions)
+  const predefinedAngles = [0, 40, 80, 120, 160, 200, 240, 280, 320];
+  
   // Helper function to get circular position using trigonometry
-  const getCircularPosition = (index: number) => {
-    const totalNotifications = notifications.length;
-    const angle = (index * 360) / totalNotifications; // Distribute evenly around 360°
-    const radius = 200 + (index % 3) * 50; // Vary radius: 200px, 250px, 300px
-    const radiusResponsive = `${radius}px`; // Base radius
+  const getCircularPosition = (notificationIndex: number) => {
+    const angle = predefinedAngles[notificationIndex] || 0; // Use pre-defined angle
+    const radius = 200 + (notificationIndex % 3) * 50; // Vary radius: 200px, 250px, 300px
     
     // Convert angle to radians
     const radian = (angle * Math.PI) / 180;
