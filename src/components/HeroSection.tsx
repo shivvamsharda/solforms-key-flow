@@ -15,8 +15,21 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
           
           {/* Left Content */}
-          <div className="space-y-8">
-            <div className="space-y-6">
+          <div className="space-y-8 relative">
+            {/* Mobile Mockup - positioned within left content area */}
+            <div className="absolute -left-16 top-8 hidden xl:block animate-float delay-300 z-0">
+              <div className="relative">
+                <img 
+                  src={mobileMockup} 
+                  alt="SolForms mobile app showing encrypted form interface" 
+                  className="w-56 h-auto transform -rotate-12 drop-shadow-2xl opacity-60"
+                />
+                {/* Glow effect behind mobile */}
+                <div className="absolute -inset-4 bg-primary/20 rounded-3xl blur-xl -z-10"></div>
+              </div>
+            </div>
+
+            <div className="space-y-6 relative z-10">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.1] tracking-tight">
                 Encrypted Forms
                 <br />
@@ -29,7 +42,7 @@ const HeroSection = () => {
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 relative z-10">
               <Button variant="hero" size="xl" className="group">
                 <Wallet className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 Start Building Forms
@@ -41,7 +54,7 @@ const HeroSection = () => {
             </div>
             
             {/* Trust indicators */}
-            <div className="flex items-center gap-6 pt-4">
+            <div className="flex items-center gap-6 pt-4 relative z-10">
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-primary" />
                 <span className="text-sm text-muted-foreground">End-to-end encrypted</span>
@@ -165,18 +178,6 @@ const HeroSection = () => {
               </div>
             </div>
             
-            {/* Mobile Mockup - positioned on left side */}
-            <div className="absolute -left-20 top-4 hidden lg:block animate-float delay-300 z-0">
-              <div className="relative">
-                <img 
-                  src={mobileMockup} 
-                  alt="SolForms mobile app showing encrypted form interface" 
-                  className="w-40 h-auto transform -rotate-12 drop-shadow-2xl opacity-80"
-                />
-                {/* Glow effect behind mobile */}
-                <div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-xl -z-10"></div>
-              </div>
-            </div>
             
             {/* Floating elements */}
             <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary/20 rounded-full animate-float blur-sm"></div>
