@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Wallet, ArrowRight, Plus, Type, CheckSquare, Lock, Zap, Shield } from "lucide-react";
+import mobileMockup from "@/assets/mobile-mockup.png";
 
 const HeroSection = () => {
   return (
@@ -161,6 +162,19 @@ const HeroSection = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            
+            {/* Mobile Mockup */}
+            <div className="absolute -right-16 top-8 hidden xl:block animate-float delay-300">
+              <div className="relative">
+                <img 
+                  src={mobileMockup} 
+                  alt="SolForms mobile app showing encrypted form interface" 
+                  className="w-48 h-auto transform rotate-12 drop-shadow-2xl"
+                />
+                {/* Glow effect behind mobile */}
+                <div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-xl -z-10"></div>
               </div>
             </div>
             
