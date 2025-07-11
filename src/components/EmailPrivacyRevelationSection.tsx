@@ -1,75 +1,42 @@
-import { useEffect, useState } from "react";
-
 const EmailPrivacyRevelationSection = () => {
-  const [currentSection, setCurrentSection] = useState(0);
-
-  const revelations = [
-    "Email forms were never meant for privacy.",
-    "They track who fills them.",
-    "They log your IP, location, device ID.",
-    "They can be changed without your knowledge.",
-    "They're centralized, unverified, and censorable.",
-    "They aren't trustless. They aren't sovereign.",
-    "Email forms are surveillance disguised as convenience."
-  ];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const sectionHeight = windowHeight;
-      
-      // Find the start of this component (after other sections)
-      const componentStart = document.getElementById('email-privacy-revelation')?.offsetTop || 0;
-      const relativeScroll = scrollTop - componentStart;
-      
-      if (relativeScroll >= 0) {
-        const sectionIndex = Math.floor(relativeScroll / sectionHeight);
-        const clampedIndex = Math.max(0, Math.min(sectionIndex, revelations.length - 1));
-        setCurrentSection(clampedIndex);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
-    
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [revelations.length]);
-
   return (
     <div 
       id="email-privacy-revelation"
-      className="relative bg-gradient-to-b from-black via-gray-900 to-black"
-      style={{ height: `${revelations.length * 100}vh` }}
+      className="relative min-h-screen bg-black flex items-center justify-center px-8 py-16"
     >
-      {revelations.map((text, index) => (
-        <div
-          key={index}
-          className="sticky top-0 h-screen flex items-center justify-center px-8"
-          style={{
-            zIndex: revelations.length - index,
-          }}
-        >
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 
-              className={`
-                text-4xl md:text-5xl lg:text-6xl xl:text-7xl 
-                font-display font-black text-white 
-                leading-tight tracking-tight
-                transition-all duration-1000 ease-out
-                ${currentSection === index 
-                  ? 'opacity-100 translate-y-0' 
-                  : currentSection > index 
-                    ? 'opacity-20 -translate-y-8' 
-                    : 'opacity-0 translate-y-8'
-                }
-              `}
-            >
-              {text}
-            </h2>
+      {/* Gradient background container */}
+      <div className="relative max-w-4xl mx-auto">
+        {/* Rounded container with gradient border effect */}
+        <div className="relative p-12 md:p-16 lg:p-20 rounded-3xl bg-gradient-to-br from-blue-900/20 via-purple-900/10 to-black border border-blue-500/20 backdrop-blur-sm">
+          {/* Inner gradient background */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-radial from-blue-500/5 via-purple-500/5 to-transparent"></div>
+          
+          {/* Content */}
+          <div className="relative text-center">
+            <p className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-display font-medium leading-relaxed text-gray-200">
+              Unlike Big Tech form platforms like{" "}
+              <span className="inline-flex items-center gap-1">
+                Google Forms <span className="text-yellow-400 text-lg">🟨</span>
+              </span>
+              ,{" "}
+              <span className="inline-flex items-center gap-1">
+                Microsoft Forms <span className="text-blue-400 text-lg">🟦</span>
+              </span>
+              , and{" "}
+              <span className="inline-flex items-center gap-1">
+                Typeform <span className="text-orange-400 text-lg">🟧</span>
+              </span>
+              ,<br className="hidden md:block" />
+              <span className="inline-flex items-center gap-2 font-bold text-green-400">
+                <span className="text-green-400 text-lg">🟩</span>
+                SolForms
+              </span>{" "}
+              prioritizes your{" "}
+              <span className="font-bold text-green-400">privacy</span>.
+            </p>
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
 };
