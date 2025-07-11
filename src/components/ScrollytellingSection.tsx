@@ -99,7 +99,7 @@ const ScrollytellingSection = () => {
       style={{ height: `${(notifications.length + 1) * 60}vh` }}
     >
       <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
-        <div className="relative w-full max-w-6xl mx-auto px-6">
+        <div className="relative w-full max-w-6xl mx-auto px-6 py-12">
           
           {/* Main Content */}
           {!showFinalFrame ? (
@@ -132,8 +132,8 @@ const ScrollytellingSection = () => {
             </>
           ) : (
             /* Final Frame */
-            <div className="text-center">
-              <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight animate-ambient-glow">
+            <div className="text-center max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground leading-relaxed animate-ambient-glow">
                 {finalFrame.text}
               </h2>
               
