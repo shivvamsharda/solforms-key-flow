@@ -60,15 +60,15 @@ const ScrollytellingSection = () => {
 
   // Pre-defined angles and positions for each notification (calculated once)
   const predefinedPositions = [
-    { angle: 30, radius: 320 },
-    { angle: 70, radius: 280 },
-    { angle: 110, radius: 350 },
-    { angle: 150, radius: 300 },
-    { angle: 190, radius: 330 },
-    { angle: 230, radius: 290 },
-    { angle: 270, radius: 340 },
-    { angle: 310, radius: 300 },
-    { angle: 350, radius: 320 }
+    { angle: 45, radius: 350 },   // PERSONAL PHOTOS
+    { angle: 85, radius: 380 },   // BANK CHECKS  
+    { angle: 125, radius: 360 },  // MEETINGS
+    { angle: 165, radius: 370 },  // ADDRESSES
+    { angle: 240, radius: 420 },  // COMMERCIAL SECRETS - moved to bottom-left with larger radius
+    { angle: 275, radius: 390 },  // CONTRACTS
+    { angle: 315, radius: 370 },  // DOCUMENTS
+    { angle: 15, radius: 400 },   // PASSWORD RESET LINKS
+    { angle: 200, radius: 450 }   // LINKS TO CLOUD FILES - moved to bottom with larger radius
   ];
   
   // Helper function to get circular position using trigonometry
@@ -116,10 +116,14 @@ const ScrollytellingSection = () => {
                 const notification = notifications[notificationIndex];
                 const position = getCircularPosition(notificationIndex);
                 
+                // Red color for dangerous data (COMMERCIAL SECRETS and LINKS TO CLOUD FILES)
+                const isDangerous = notificationIndex === 4 || notificationIndex === 8;
+                const textColor = isDangerous ? 'text-red-500' : 'text-foreground';
+                
                 return (
                   <p
                     key={notificationIndex}
-                    className="text-base md:text-lg font-bold text-foreground tracking-wide transition-opacity duration-300"
+                    className={`text-base md:text-lg font-bold ${textColor} tracking-wide transition-opacity duration-300`}
                     style={{
                       ...position,
                       opacity: 1
