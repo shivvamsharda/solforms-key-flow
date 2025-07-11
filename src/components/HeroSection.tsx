@@ -17,7 +17,7 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="space-y-8 relative">
             {/* Mobile Mockup - positioned within left content area */}
-            <div className="absolute -left-16 top-8 hidden xl:block animate-float delay-300 z-0">
+            <div className="absolute -left-40 top-8 hidden xl:block z-0">
               <div className="relative">
                 <img 
                   src={mobileMockup} 
