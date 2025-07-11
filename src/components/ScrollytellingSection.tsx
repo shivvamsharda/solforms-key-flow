@@ -132,14 +132,16 @@ const ScrollytellingSection = () => {
             </>
           ) : (
             /* Final Frame */
-            <div className="text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground leading-relaxed animate-ambient-glow">
-                {finalFrame.text}
-              </h2>
-              
-              {/* Ambient effects for final frame */}
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-destructive/10 rounded-full blur-3xl animate-ambient-glow"></div>
+            <div className="flex items-center justify-center min-h-[70vh] px-8 py-16">
+              <div className="text-center max-w-4xl mx-auto relative">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground leading-relaxed animate-ambient-glow">
+                  {finalFrame.text}
+                </h2>
+                
+                {/* Ambient effects for final frame */}
+                <div className="fixed inset-0 pointer-events-none -z-10">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-destructive/10 rounded-full blur-3xl animate-ambient-glow"></div>
+                </div>
               </div>
             </div>
           )}
