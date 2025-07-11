@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 
 const ScrollytellingSection = () => {
   const [visibleNotifications, setVisibleNotifications] = useState<number[]>([]);
-  const [currentScrollState, setCurrentScrollState] = useState<'notifications' | 'final'>('notifications');
   const [isActive, setIsActive] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -18,10 +17,6 @@ const ScrollytellingSection = () => {
     { text: "LINKS TO CLOUD FILES" }
   ];
 
-  const finalFrame = {
-    text: "Forms built on email aren't private. They're just convenient surveillance.",
-    isFinal: true
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,8 +24,7 @@ const ScrollytellingSection = () => {
 
       const rect = sectionRef.current.getBoundingClientRect();
       const sectionHeight = rect.height;
-      const totalFrames = notifications.length + 1;
-      const frameHeight = sectionHeight / totalFrames;
+      const frameHeight = sectionHeight / notifications.length;
       
       const isInViewport = rect.top <= window.innerHeight && rect.bottom >= 0;
       setIsActive(isInViewport);
@@ -38,18 +32,10 @@ const ScrollytellingSection = () => {
       if (isInViewport) {
         const scrollProgress = Math.abs(rect.top);
         const frameIndex = Math.floor(scrollProgress / frameHeight);
-        const clampedIndex = Math.max(0, Math.min(frameIndex, totalFrames - 1));
+        const clampedIndex = Math.max(0, Math.min(frameIndex, notifications.length - 1));
         
-        if (clampedIndex >= notifications.length) {
-          // Final frame
-          setCurrentScrollState('final');
-          setVisibleNotifications([]);
-        } else {
-          // Show notifications
-          setCurrentScrollState('notifications');
-          const newVisible = Array.from({ length: clampedIndex + 1 }, (_, i) => i);
-          setVisibleNotifications(newVisible);
-        }
+        const newVisible = Array.from({ length: clampedIndex + 1 }, (_, i) => i);
+        setVisibleNotifications(newVisible);
       }
     };
 
@@ -90,61 +76,43 @@ const ScrollytellingSection = () => {
     };
   };
 
-  const showFinalFrame = currentScrollState === 'final' && isActive;
-
   return (
     <section 
       ref={sectionRef}
       className="relative bg-black transition-all duration-1000"
-      style={{ height: `${(notifications.length + 1) * 60}vh` }}
+      style={{ height: `${notifications.length * 60}vh` }}
     >
       <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
         <div className="relative w-full max-w-6xl mx-auto px-6 py-12">
           
           {/* Main Content */}
-          {!showFinalFrame ? (
-            <>
-              {/* Main Heading - Always Visible */}
-              <div className="text-center mb-16">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-                  Email is full of your personal data
-                </h1>
-              </div>
-
-              {/* Notification Pop-ups - Plain text distributed in 360 degrees */}
-              {visibleNotifications.map((notificationIndex) => {
-                const notification = notifications[notificationIndex];
-                const position = getCircularPosition(notificationIndex);
-                
-                return (
-                  <p
-                    key={notificationIndex}
-                    className="text-base md:text-lg font-bold text-red-500 tracking-wide transition-opacity duration-300"
-                    style={{
-                      ...position,
-                      opacity: 1
-                    }}
-                  >
-                    {notification.text}
-                  </p>
-                );
-              })}
-            </>
-          ) : (
-            /* Final Frame */
-            <div className="flex items-center justify-center min-h-[70vh] px-8 py-16">
-              <div className="text-center max-w-4xl mx-auto relative">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground leading-relaxed animate-ambient-glow">
-                  {finalFrame.text}
-                </h2>
-                
-                {/* Ambient effects for final frame */}
-                <div className="fixed inset-0 pointer-events-none -z-10">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-destructive/10 rounded-full blur-3xl animate-ambient-glow"></div>
-                </div>
-              </div>
+          <>
+            {/* Main Heading - Always Visible */}
+            <div className="text-center mb-16">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                Email is full of your personal data
+              </h1>
             </div>
-          )}
+
+            {/* Notification Pop-ups - Plain text distributed in 360 degrees */}
+            {visibleNotifications.map((notificationIndex) => {
+              const notification = notifications[notificationIndex];
+              const position = getCircularPosition(notificationIndex);
+              
+              return (
+                <p
+                  key={notificationIndex}
+                  className="text-base md:text-lg font-bold text-red-500 tracking-wide transition-opacity duration-300"
+                  style={{
+                    ...position,
+                    opacity: 1
+                  }}
+                >
+                  {notification.text}
+                </p>
+              );
+            })}
+          </>
         </div>
       </div>
     </section>
