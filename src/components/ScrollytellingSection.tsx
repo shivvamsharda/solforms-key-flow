@@ -58,13 +58,22 @@ const ScrollytellingSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [notifications.length]);
 
-  // Pre-defined angles for each notification (fixed positions)
-  const predefinedAngles = [0, 40, 80, 120, 160, 200, 240, 280, 320];
+  // Pre-defined angles and positions for each notification (calculated once)
+  const predefinedPositions = [
+    { angle: 0, radius: 250 },
+    { angle: 40, radius: 200 },
+    { angle: 80, radius: 300 },
+    { angle: 120, radius: 220 },
+    { angle: 160, radius: 280 },
+    { angle: 200, radius: 200 },
+    { angle: 240, radius: 260 },
+    { angle: 280, radius: 220 },
+    { angle: 320, radius: 240 }
+  ];
   
   // Helper function to get circular position using trigonometry
   const getCircularPosition = (notificationIndex: number) => {
-    const angle = predefinedAngles[notificationIndex] || 0; // Use pre-defined angle
-    const radius = 200 + (notificationIndex % 3) * 50; // Vary radius: 200px, 250px, 300px
+    const { angle, radius } = predefinedPositions[notificationIndex] || { angle: 0, radius: 200 };
     
     // Convert angle to radians
     const radian = (angle * Math.PI) / 180;
@@ -110,10 +119,10 @@ const ScrollytellingSection = () => {
                 return (
                   <p
                     key={notificationIndex}
-                    className="text-sm md:text-base font-medium text-foreground tracking-wide animate-fade-in"
+                    className="text-sm md:text-base font-medium text-foreground tracking-wide transition-opacity duration-300"
                     style={{
                       ...position,
-                      animationDelay: `${notificationIndex * 200}ms`
+                      opacity: 1
                     }}
                   >
                     {notification.text}
