@@ -116,14 +116,10 @@ const ScrollytellingSection = () => {
                 const notification = notifications[notificationIndex];
                 const position = getCircularPosition(notificationIndex);
                 
-                // Red color for dangerous data (COMMERCIAL SECRETS and LINKS TO CLOUD FILES)
-                const isDangerous = notificationIndex === 4 || notificationIndex === 8;
-                const textColor = isDangerous ? 'text-red-500' : 'text-foreground';
-                
                 return (
                   <p
                     key={notificationIndex}
-                    className={`text-base md:text-lg font-bold ${textColor} tracking-wide transition-opacity duration-300`}
+                    className="text-base md:text-lg font-bold text-red-500 tracking-wide transition-opacity duration-300"
                     style={{
                       ...position,
                       opacity: 1
