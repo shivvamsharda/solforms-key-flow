@@ -1,3 +1,7 @@
+import googleLogo from "@/assets/google-logo.svg";
+import microsoftLogo from "@/assets/microsoft-logo.png";
+import typeformLogo from "@/assets/typeform-logo.svg";
+
 const EmailPrivacyRevelationSection = () => {
   return (
     <div 
@@ -17,18 +21,20 @@ const EmailPrivacyRevelationSection = () => {
           <div className="relative text-center max-w-5xl mx-auto">
             <p className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-medium leading-[1.4] text-gray-100 tracking-tight">
               Unlike Big Tech form platforms like{" "}
-              <span className="text-yellow-400 font-semibold">
-                Google Forms
+              <span className="inline-flex items-center gap-3">
+                Google
+                <img src={googleLogo} alt="Google" className="h-8 md:h-10 lg:h-12 xl:h-14" />
               </span>
               ,{" "}
-              <span className="text-blue-400 font-semibold">
-                Microsoft Forms
+              <span className="inline-flex items-center gap-3">
+                Microsoft
+                <img src={microsoftLogo} alt="Microsoft" className="h-8 md:h-10 lg:h-12 xl:h-14" />
               </span>
               , and{" "}
-              <span className="text-orange-400 font-semibold">
+              <span className="inline-flex items-center gap-3">
                 Typeform
+                <img src={typeformLogo} alt="Typeform" className="h-8 md:h-10 lg:h-12 xl:h-14" />
               </span>
-              ,
               <br className="hidden sm:block" />
               <span className="font-bold text-green-400">
                 SolForms
