@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { Eye, Mail, Shield, Network, AlertTriangle } from "lucide-react";
 
 const ScrollytellingSection = () => {
   const [visibleNotifications, setVisibleNotifications] = useState<number[]>([]);
@@ -9,29 +8,40 @@ const ScrollytellingSection = () => {
 
   const notifications = [
     {
-      text: "Tracking pixels know when you open mail.",
-      icon: Eye,
-      position: "top-left"
+      text: "PERSONAL PHOTOS",
+      position: "top-left-far"
     },
     {
-      text: "Phishing links steal your identity.",
-      icon: Shield,
-      position: "top-right"
+      text: "BANK CHECKS",
+      position: "top-right-far"
     },
     {
-      text: "Your inbox is a honeypot for attackers.",
-      icon: Mail,
-      position: "middle-left"
+      text: "MEETINGS",
+      position: "left-upper"
     },
     {
-      text: "Metadata exposes who you talk to — and when.",
-      icon: Network,
-      position: "middle-right"
+      text: "ADDRESSES",
+      position: "right-upper"
     },
     {
-      text: "Password resets. Breach portals. Surveillance defaults.",
-      icon: AlertTriangle,
-      position: "bottom-center"
+      text: "COMMERCIAL SECRETS",
+      position: "left-lower"
+    },
+    {
+      text: "CONTRACTS",
+      position: "right-lower"
+    },
+    {
+      text: "DOCUMENTS",
+      position: "bottom-left-far"
+    },
+    {
+      text: "PASSWORD RESET LINKS",
+      position: "bottom-right-far"
+    },
+    {
+      text: "LINKS TO CLOUD FILES",
+      position: "bottom-center-far"
     }
   ];
 
@@ -77,19 +87,25 @@ const ScrollytellingSection = () => {
 
   // Helper function to get notification position styles
   const getNotificationPosition = (position: string, index: number) => {
-    const baseDelay = index * 200; // Stagger animations
-    
     switch (position) {
-      case "top-left":
-        return `absolute top-16 left-8 md:left-16 transform animate-fade-in`;
-      case "top-right":
-        return `absolute top-16 right-8 md:right-16 transform animate-fade-in`;
-      case "middle-left":
-        return `absolute top-1/2 left-8 md:left-16 -translate-y-1/2 transform animate-fade-in`;
-      case "middle-right":
-        return `absolute top-1/2 right-8 md:right-16 -translate-y-1/2 transform animate-fade-in`;
-      case "bottom-center":
-        return `absolute bottom-32 left-1/2 -translate-x-1/2 transform animate-fade-in`;
+      case "top-left-far":
+        return `absolute top-12 left-4 md:left-8 transform animate-fade-in`;
+      case "top-right-far":
+        return `absolute top-12 right-4 md:right-8 transform animate-fade-in`;
+      case "left-upper":
+        return `absolute top-1/3 left-4 md:left-8 transform animate-fade-in`;
+      case "right-upper":
+        return `absolute top-1/3 right-4 md:right-8 transform animate-fade-in`;
+      case "left-lower":
+        return `absolute top-2/3 left-4 md:left-8 transform animate-fade-in`;
+      case "right-lower":
+        return `absolute top-2/3 right-4 md:right-8 transform animate-fade-in`;
+      case "bottom-left-far":
+        return `absolute bottom-12 left-4 md:left-8 transform animate-fade-in`;
+      case "bottom-right-far":
+        return `absolute bottom-12 right-4 md:right-8 transform animate-fade-in`;
+      case "bottom-center-far":
+        return `absolute bottom-12 left-1/2 -translate-x-1/2 transform animate-fade-in`;
       default:
         return `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform animate-fade-in`;
     }
@@ -119,27 +135,21 @@ const ScrollytellingSection = () => {
               {/* Notification Pop-ups */}
               {visibleNotifications.map((notificationIndex) => {
                 const notification = notifications[notificationIndex];
-                const IconComponent = notification.icon;
                 
                 return (
                   <div
                     key={notificationIndex}
                     className={`${getNotificationPosition(notification.position, notificationIndex)} 
-                      bg-background/10 backdrop-blur-sm border border-destructive/30 rounded-lg p-4 
-                      shadow-lg max-w-xs w-full hover:bg-background/20 transition-all duration-300
+                      bg-muted/80 border border-muted-foreground/20 p-3 md:p-4 
+                      max-w-[200px] md:max-w-[250px] transition-all duration-300
                       animate-scale-in`}
                     style={{
                       animationDelay: `${notificationIndex * 200}ms`
                     }}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0">
-                        <IconComponent className="w-5 h-5 text-destructive mt-0.5" />
-                      </div>
-                      <p className="text-sm text-foreground/90 leading-relaxed">
-                        {notification.text}
-                      </p>
-                    </div>
+                    <p className="text-xs md:text-sm font-medium text-foreground tracking-wide">
+                      {notification.text}
+                    </p>
                   </div>
                 );
               })}
