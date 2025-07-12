@@ -16,22 +16,6 @@ const HeroSection = () => {
           
           {/* Left Content */}
           <div className="space-y-8 relative lg:pr-8 xl:pr-12 overflow-visible">
-            {/* Mobile Mockup - positioned outside container to prevent clipping */}
-            <div className="absolute top-8 z-0 hidden lg:block overflow-visible">
-              <div className="relative lg:-translate-x-20 xl:-translate-x-24 2xl:-translate-x-28">
-                <div className="lg:w-40 xl:w-48 2xl:w-56">
-                  <div className="relative">
-                    <img 
-                      src={mobileMockup} 
-                      alt="SolForms mobile app showing encrypted form interface" 
-                      className="w-full h-auto transform -rotate-12 drop-shadow-2xl opacity-60"
-                    />
-                    {/* Glow effect behind mobile */}
-                    <div className="absolute -inset-4 bg-primary/20 rounded-3xl blur-xl -z-10"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <div className="space-y-6 relative z-10">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.1] tracking-tight">
