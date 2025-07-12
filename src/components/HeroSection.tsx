@@ -4,25 +4,28 @@ import mobileMockup from "/lovable-uploads/a4d4dfe7-fe2e-4199-9a9c-a6b34ae304f3.
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative overflow-hidden">
+    <section className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative">
       {/* Enhanced background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--primary)_0%,_transparent_50%)] opacity-30"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--accent)_0%,_transparent_50%)] opacity-20"></div>
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-accent/10 rounded-full blur-2xl"></div>
       
-      <div className="container mx-auto px-6 relative z-10 min-h-screen flex items-center">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+      <div className="container mx-auto px-6 xl:px-16 2xl:px-24 relative z-10 min-h-screen flex items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center w-full">
           
           {/* Left Content */}
-          <div className="space-y-8 relative">
-            {/* Mobile Mockup - positioned within left content area */}
-            <div className="absolute -left-64 top-8 hidden xl:block z-0">
+          <div className="space-y-8 relative lg:pr-8 xl:pr-12">
+            {/* Mobile Mockup - responsive positioning */}
+            <div className="absolute top-8 z-0 hidden lg:block
+                           lg:-left-16 lg:w-40
+                           xl:-left-20 xl:w-48
+                           2xl:-left-24 2xl:w-56">
               <div className="relative">
                 <img 
                   src={mobileMockup} 
                   alt="SolForms mobile app showing encrypted form interface" 
-                  className="w-56 h-auto transform -rotate-12 drop-shadow-2xl opacity-60"
+                  className="w-full h-auto transform -rotate-12 drop-shadow-2xl opacity-60"
                 />
                 {/* Glow effect behind mobile */}
                 <div className="absolute -inset-4 bg-primary/20 rounded-3xl blur-xl -z-10"></div>
