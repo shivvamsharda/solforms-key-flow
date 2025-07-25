@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { DndContext, DragEndEvent, DragOverEvent, PointerSensor, KeyboardSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { FormCanvas } from "@/components/form-builder/FormCanvas";
 import { QuestionPalette } from "@/components/form-builder/QuestionPalette";
 import { PropertyPanel } from "@/components/form-builder/PropertyPanel";
@@ -49,6 +51,13 @@ export default function FormBuilder() {
   const [selectedField, setSelectedField] = useState<FormField | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditing);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     if (!loading && !user) {
@@ -189,6 +198,76 @@ export default function FormBuilder() {
     }
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    // Handle dropping a new question type
+    if (active.data.current?.type === "question-type") {
+      const questionType = active.data.current.questionType;
+      const newField: FormField = {
+        id: `field-${Date.now()}`,
+        field_type: questionType.type,
+        title: questionType.title,
+        description: "",
+        required: false,
+        field_order: formData.fields.length,
+        options: questionType.type === "multiple_choice" || questionType.type === "checkbox" || questionType.type === "dropdown" 
+          ? ["Option 1", "Option 2"] 
+          : undefined,
+        validation: {},
+        settings: {}
+      };
+
+      setFormData(prev => ({ ...prev, fields: [...prev.fields, newField] }));
+      setSelectedField(newField);
+    }
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    // Handle reordering fields
+    const { active, over } = event;
+    
+    if (!over || !active.data.current || active.data.current.type !== "field") return;
+
+    const activeIndex = formData.fields.findIndex(field => field.id === active.id);
+    const overIndex = formData.fields.findIndex(field => field.id === over.id);
+
+    if (activeIndex !== overIndex) {
+      const newFields = [...formData.fields];
+      const [removed] = newFields.splice(activeIndex, 1);
+      newFields.splice(overIndex, 0, removed);
+      
+      // Update field orders
+      const updatedFields = newFields.map((field, index) => ({
+        ...field,
+        field_order: index
+      }));
+
+      setFormData(prev => ({ ...prev, fields: updatedFields }));
+    }
+  };
+
+  const addQuestion = (questionType: any) => {
+    const newField: FormField = {
+      id: `field-${Date.now()}`,
+      field_type: questionType.type,
+      title: questionType.title,
+      description: "",
+      required: false,
+      field_order: formData.fields.length,
+      options: questionType.type === "multiple_choice" || questionType.type === "checkbox" || questionType.type === "dropdown" 
+        ? ["Option 1", "Option 2"] 
+        : undefined,
+      validation: {},
+      settings: {}
+    };
+
+    setFormData(prev => ({ ...prev, fields: [...prev.fields, newField] }));
+    setSelectedField(newField);
+  };
+
   if (loading || isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -205,96 +284,102 @@ export default function FormBuilder() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border bg-card px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/dashboard")}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
+    <DndContext 
+      sensors={sensors}
+      onDragEnd={handleDragEnd} 
+      onDragOver={handleDragOver}
+    >
+      <div className="min-h-screen bg-background flex flex-col">
+        {/* Header */}
+        <header className="border-b border-border bg-card px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/dashboard")}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+              <div className="flex items-center space-x-2">
+                <Input
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  className="text-lg font-semibold border-none bg-transparent px-0 focus-visible:ring-0"
+                  placeholder="Form Title"
+                />
+              </div>
+            </div>
+            
             <div className="flex items-center space-x-2">
-              <Input
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                className="text-lg font-semibold border-none bg-transparent px-0 focus-visible:ring-0"
-                placeholder="Form Title"
-              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {/* TODO: Implement preview */}}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Preview
+              </Button>
+              <Button
+                size="sm"
+                onClick={saveForm}
+                disabled={isSaving}
+                className="bg-gradient-primary hover:shadow-glow"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
             </div>
           </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {/* TODO: Implement preview */}}
-            >
-              <Eye className="w-4 h-4 mr-2" />
-              Preview
-            </Button>
-            <Button
-              size="sm"
-              onClick={saveForm}
-              disabled={isSaving}
-              className="bg-gradient-primary hover:shadow-glow"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {isSaving ? "Saving..." : "Save"}
-            </Button>
+
+          {/* Form Description */}
+          <div className="mt-2">
+            <Textarea
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              placeholder="Form description (optional)"
+              className="border-none bg-transparent px-0 text-sm text-muted-foreground resize-none focus-visible:ring-0"
+              rows={1}
+            />
           </div>
+        </header>
+
+        {/* Main Content */}
+        <div className="flex-1 flex">
+          {/* Question Palette */}
+          <aside className="w-64 border-r border-border bg-card">
+            <QuestionPalette onAddQuestion={addQuestion} />
+          </aside>
+
+          {/* Form Canvas */}
+          <main className="flex-1 relative">
+            <FormCanvas
+              fields={formData.fields}
+              onFieldsChange={(fields) => setFormData(prev => ({ ...prev, fields }))}
+              selectedField={selectedField}
+              onFieldSelect={setSelectedField}
+            />
+          </main>
+
+          {/* Property Panel */}
+          <aside className="w-80 border-l border-border bg-card">
+            <PropertyPanel
+              selectedField={selectedField}
+              onFieldUpdate={(updatedField) => {
+                setFormData(prev => ({
+                  ...prev,
+                  fields: prev.fields.map(field =>
+                    field.id === updatedField.id ? updatedField : field
+                  )
+                }));
+              }}
+              formSettings={formData.settings}
+              onFormSettingsUpdate={(settings) => setFormData(prev => ({ ...prev, settings }))}
+            />
+          </aside>
         </div>
-
-        {/* Form Description */}
-        <div className="mt-2">
-          <Textarea
-            value={formData.description}
-            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-            placeholder="Form description (optional)"
-            className="border-none bg-transparent px-0 text-sm text-muted-foreground resize-none focus-visible:ring-0"
-            rows={1}
-          />
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="flex-1 flex">
-        {/* Question Palette */}
-        <aside className="w-64 border-r border-border bg-card">
-          <QuestionPalette />
-        </aside>
-
-        {/* Form Canvas */}
-        <main className="flex-1 relative">
-          <FormCanvas
-            fields={formData.fields}
-            onFieldsChange={(fields) => setFormData(prev => ({ ...prev, fields }))}
-            selectedField={selectedField}
-            onFieldSelect={setSelectedField}
-          />
-        </main>
-
-        {/* Property Panel */}
-        <aside className="w-80 border-l border-border bg-card">
-          <PropertyPanel
-            selectedField={selectedField}
-            onFieldUpdate={(updatedField) => {
-              setFormData(prev => ({
-                ...prev,
-                fields: prev.fields.map(field =>
-                  field.id === updatedField.id ? updatedField : field
-                )
-              }));
-            }}
-            formSettings={formData.settings}
-            onFormSettingsUpdate={(settings) => setFormData(prev => ({ ...prev, settings }))}
-          />
-        </aside>
       </div>
-    </div>
+    </DndContext>
   );
 }

@@ -88,9 +88,10 @@ const questionTypes: QuestionType[] = [
 
 interface DraggableQuestionTypeProps {
   questionType: QuestionType;
+  onAddQuestion: (questionType: QuestionType) => void;
 }
 
-function DraggableQuestionType({ questionType }: DraggableQuestionTypeProps) {
+function DraggableQuestionType({ questionType, onAddQuestion }: DraggableQuestionTypeProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: questionType.id,
     data: {
@@ -109,7 +110,8 @@ function DraggableQuestionType({ questionType }: DraggableQuestionTypeProps) {
       style={style}
       {...listeners}
       {...attributes}
-      className={`p-3 border border-border rounded-lg cursor-grab hover:shadow-md transition-shadow ${
+      onClick={() => onAddQuestion(questionType)}
+      className={`p-3 border border-border rounded-lg cursor-pointer hover:shadow-md transition-shadow ${
         isDragging ? 'opacity-50' : ''
       }`}
     >
@@ -126,7 +128,11 @@ function DraggableQuestionType({ questionType }: DraggableQuestionTypeProps) {
   );
 }
 
-export function QuestionPalette() {
+interface QuestionPaletteProps {
+  onAddQuestion: (questionType: QuestionType) => void;
+}
+
+export function QuestionPalette({ onAddQuestion }: QuestionPaletteProps) {
   return (
     <div className="p-4 h-full overflow-y-auto">
       <Card>
@@ -138,6 +144,7 @@ export function QuestionPalette() {
             <DraggableQuestionType
               key={questionType.id}
               questionType={questionType}
+              onAddQuestion={onAddQuestion}
             />
           ))}
         </CardContent>
