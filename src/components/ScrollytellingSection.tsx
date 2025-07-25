@@ -97,9 +97,17 @@ const ScrollytellingSection = () => {
     const orbitalRadius = getOrbitalRadius();
     const notificationSize = estimateNotificationSize(text);
     
-    // Calculate exact angle for perfect 360° distribution
-    const angleIncrement = 360 / notifications.length;
-    const angle = notificationIndex * angleIncrement;
+    let angle;
+    
+    // Special positioning for "PASSWORD RESET LINKS" - move to upper-right as indicated by arrow
+    if (text === "PASSWORD RESET LINKS") {
+      angle = -45; // Upper-right quadrant position (45 degrees from horizontal)
+    } else {
+      // Calculate exact angle for perfect 360° distribution for other notifications
+      const angleIncrement = 360 / notifications.length;
+      angle = notificationIndex * angleIncrement;
+    }
+    
     const radian = (angle * Math.PI) / 180;
     
     // Calculate position on the orbital circle
