@@ -7,11 +7,11 @@ const EmailPrivacyRevelationSection = () => {
       {/* Large gradient background container */}
       <div className="relative w-full max-w-7xl mx-auto">
         {/* Rounded container with enhanced gradient border effect */}
-        <div className="relative p-16 md:p-20 lg:p-24 xl:p-28 rounded-3xl bg-gradient-to-br from-blue-900/30 via-purple-900/20 to-black border border-blue-400/30 backdrop-blur-sm shadow-2xl">
+        <div className="relative p-16 md:p-20 lg:p-24 xl:p-28 rounded-3xl bg-gradient-to-br from-blue-900/30 via-orange-200/20 to-black border border-blue-400/30 backdrop-blur-sm shadow-2xl">
           {/* Enhanced inner gradient background */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-radial from-blue-500/10 via-purple-500/8 to-transparent"></div>
+          <div className="absolute inset-0 rounded-3xl bg-gradient-radial from-blue-500/10 via-orange-200/8 to-transparent"></div>
           {/* Additional glow effect */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5"></div>
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/5 via-transparent to-orange-200/5"></div>
           
           {/* Content */}
           <div className="relative text-center max-w-5xl mx-auto">
