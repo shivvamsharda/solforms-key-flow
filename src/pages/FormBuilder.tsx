@@ -373,6 +373,7 @@ export default function FormBuilder() {
                     field.id === updatedField.id ? updatedField : field
                   )
                 }));
+                setSelectedField(updatedField);
               }}
               formSettings={formData.settings}
               onFormSettingsUpdate={(settings) => setFormData(prev => ({ ...prev, settings }))}
