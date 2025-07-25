@@ -1,8 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Wallet, ArrowRight, Plus, Type, CheckSquare, Lock, Zap, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import mobileMockup from "/lovable-uploads/a4d4dfe7-fe2e-4199-9a9c-a6b34ae304f3.png";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleStartBuilding = () => {
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      // Scroll to features or show wallet connection
+      document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <section className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative pt-16 overflow-visible">
       {/* Enhanced background decoration */}
@@ -31,11 +44,11 @@ const HeroSection = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-              <Button variant="hero" size="xl" className="group">
+              <Button variant="hero" size="xl" className="group" onClick={handleStartBuilding}>
                 <Wallet className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                Start Building Forms
+                {user ? "Go to Dashboard" : "Start Building Forms"}
               </Button>
-              <Button variant="outline" size="xl" className="group">
+              <Button variant="outline" size="xl" className="group" onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}>
                 See How It Works
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>

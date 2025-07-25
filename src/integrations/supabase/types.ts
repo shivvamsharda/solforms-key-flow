@@ -53,6 +53,36 @@ export type Database = {
           },
         ]
       }
+      form_analytics: {
+        Row: {
+          created_at: string
+          event_type: string
+          form_id: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          wallet_address: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          form_id: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          wallet_address?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          form_id?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
       form_fields: {
         Row: {
           created_at: string
@@ -141,13 +171,44 @@ export type Database = {
           },
         ]
       }
+      form_shares: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          form_id: string
+          id: string
+          share_type: string
+          share_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          form_id: string
+          id?: string
+          share_type: string
+          share_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          form_id?: string
+          id?: string
+          share_type?: string
+          share_url?: string | null
+        }
+        Relationships: []
+      }
       forms: {
         Row: {
           created_at: string
           description: string | null
+          expires_at: string | null
+          form_schema: Json | null
           id: string
           published: boolean
+          response_limit: number | null
           settings: Json
+          thank_you_message: string | null
           title: string
           updated_at: string
           user_id: string
@@ -155,9 +216,13 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          expires_at?: string | null
+          form_schema?: Json | null
           id?: string
           published?: boolean
+          response_limit?: number | null
           settings?: Json
+          thank_you_message?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -165,12 +230,40 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          expires_at?: string | null
+          form_schema?: Json | null
           id?: string
           published?: boolean
+          response_limit?: number | null
           settings?: Json
+          thank_you_message?: string | null
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      token_balances: {
+        Row: {
+          balance: number
+          checked_at: string
+          id: string
+          token_mint: string
+          wallet_address: string
+        }
+        Insert: {
+          balance?: number
+          checked_at?: string
+          id?: string
+          token_mint: string
+          wallet_address: string
+        }
+        Update: {
+          balance?: number
+          checked_at?: string
+          id?: string
+          token_mint?: string
+          wallet_address?: string
         }
         Relationships: []
       }
