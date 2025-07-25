@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, FileText, BarChart3, Settings, Users } from "lucide-react";
+import { Plus, FileText, BarChart3, Settings, Users, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { WalletButton } from "@/components/WalletButton";
+import { ShareModal } from "@/components/ShareModal";
 import { toast } from "@/hooks/use-toast";
 
 interface Form {
@@ -24,6 +25,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [forms, setForms] = useState<Form[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedFormId, setSelectedFormId] = useState<string>("");
 
   useEffect(() => {
     if (!loading && !user) {
@@ -61,6 +64,11 @@ export default function Dashboard() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const openShareModal = (formId: string) => {
+    setSelectedFormId(formId);
+    setShareModalOpen(true);
   };
 
   if (loading || !user) {
@@ -202,13 +210,24 @@ export default function Dashboard() {
                         Edit
                       </Button>
                       {form.published && (
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => navigate(`/forms/${form.id}/responses`)}
-                        >
-                          Responses
-                        </Button>
+                        <>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => navigate(`/forms/${form.id}/responses`)}
+                          >
+                            Responses
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => openShareModal(form.id)}
+                            className="text-blue-600 hover:text-blue-700"
+                          >
+                            <Share2 className="h-3 w-3 mr-1" />
+                            Share
+                          </Button>
+                        </>
                       )}
                     </div>
                   </div>
@@ -218,6 +237,13 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      <ShareModal 
+        formId={selectedFormId}
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+      />
     </div>
   );
 }
