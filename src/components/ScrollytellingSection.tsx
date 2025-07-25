@@ -135,7 +135,7 @@ const ScrollytellingSection = () => {
     });
     
     setNotificationPositions(newPositions);
-  }, [visibleNotifications, containerDimensions]);
+  }, [visibleNotifications, containerDimensions, notifications]);
 
   return (
     <section 
