@@ -21,7 +21,7 @@ export const WalletButton = () => {
   };
 
   if (!connected) {
-    return <WalletMultiButton className="!bg-gradient-primary !text-primary-foreground hover:!shadow-glow hover:!scale-105 !font-semibold !h-10 !px-4 !py-2 !rounded-lg !transition-all !duration-300" />;
+    return <WalletMultiButton className="!bg-gradient-primary !text-primary-foreground hover:!shadow-glow hover:!scale-105 !font-semibold !h-10 !px-4 !py-2 !rounded-lg !transition-all !duration-300 !text-base" />;
   }
 
   if (connected && !user) {
