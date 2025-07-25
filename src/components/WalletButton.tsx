@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Button } from "@/components/ui/button";
-import { Wallet, LogOut } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Wallet, LogOut, ChevronDown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export const WalletButton = () => {
-  const { connected, publicKey } = useWallet();
+  const { connected, publicKey, wallets, select, connect } = useWallet();
   const { user, signInWithWallet, signOut, loading } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState(false);
 
@@ -16,12 +16,50 @@ export const WalletButton = () => {
     setIsSigningIn(false);
   };
 
+  const handleWalletSelect = async (walletName: string) => {
+    const wallet = wallets.find((w) => w.adapter.name === walletName);
+    if (wallet) {
+      select(wallet.adapter.name);
+      try {
+        await connect();
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+      }
+    }
+  };
+
   const truncateAddress = (address: string) => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
   if (!connected) {
-    return <WalletMultiButton className="!bg-gradient-primary !text-primary-foreground hover:!shadow-glow hover:!scale-105 !font-semibold !h-10 !px-4 !py-2 !rounded-lg !transition-all !duration-300 !text-base" />;
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="hero">
+            <Wallet className="w-4 h-4" />
+            Select Wallet
+            <ChevronDown className="w-4 h-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {wallets.map((wallet) => (
+            <DropdownMenuItem
+              key={wallet.adapter.name}
+              onClick={() => handleWalletSelect(wallet.adapter.name)}
+              className="cursor-pointer"
+            >
+              <img 
+                src={wallet.adapter.icon} 
+                alt={wallet.adapter.name}
+                className="w-4 h-4 mr-2"
+              />
+              {wallet.adapter.name}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
   }
 
   if (connected && !user) {
