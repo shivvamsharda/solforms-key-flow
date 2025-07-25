@@ -88,7 +88,9 @@ export function SortableField({ field, isSelected, onSelect, onDelete, onUpdate 
           </Button>
         </div>
 
-        <QuestionRenderer field={field} preview={true} />
+        <div onClick={(e) => e.stopPropagation()}>
+          <QuestionRenderer field={field} preview={false} />
+        </div>
       </CardContent>
     </Card>
   );
