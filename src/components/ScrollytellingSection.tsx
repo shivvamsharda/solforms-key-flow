@@ -75,21 +75,23 @@ const ScrollytellingSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [notifications.length]);
 
-  // Get protected zone around headline
+  // Get protected "solar zone" around headline
   const getProtectedZone = () => {
     if (!headlineRef.current || !containerRef.current) return null;
     
     const headlineRect = headlineRef.current.getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
     
-    // Calculate buffer based on screen size
-    const buffer = Math.max(60, containerDimensions.width * 0.1);
+    // Create a large "solar zone" - sacred area around the sun (headline)
+    const solarRadius = Math.max(200, containerDimensions.width * 0.15, containerDimensions.height * 0.15);
+    const centerX = (headlineRect.left + headlineRect.right) / 2 - containerRect.left;
+    const centerY = (headlineRect.top + headlineRect.bottom) / 2 - containerRect.top;
     
     return {
-      x: headlineRect.left - containerRect.left - buffer,
-      y: headlineRect.top - containerRect.top - buffer,
-      width: headlineRect.width + (buffer * 2),
-      height: headlineRect.height + (buffer * 2)
+      x: centerX - solarRadius,
+      y: centerY - solarRadius,
+      width: solarRadius * 2,
+      height: solarRadius * 2
     };
   };
 
@@ -110,33 +112,40 @@ const ScrollytellingSection = () => {
     return { width: responsiveWidth, height: responsiveHeight };
   };
 
-  // Dynamic responsive positioning system
-  const getResponsiveRadius = () => {
-    const baseRadius = Math.min(containerDimensions.width, containerDimensions.height) * 0.25;
-    const minRadius = Math.max(150, containerDimensions.width * 0.15);
-    const maxRadius = Math.min(400, containerDimensions.width * 0.4);
-    return Math.max(minRadius, Math.min(maxRadius, baseRadius));
+  // Get orbital radius - planets must stay outside the solar zone
+  const getOrbitalRadius = () => {
+    // Minimum orbital distance - must be outside the solar zone
+    const solarRadius = Math.max(200, containerDimensions.width * 0.15, containerDimensions.height * 0.15);
+    const minOrbitalRadius = solarRadius + 80; // Buffer beyond solar zone
+    const maxOrbitalRadius = Math.min(containerDimensions.width, containerDimensions.height) * 0.45;
+    
+    return { min: minOrbitalRadius, max: maxOrbitalRadius };
   };
 
-  // Find collision-free position for notification
+  // Find collision-free orbital position for each "planet" (notification)
   const findSafePosition = (notificationIndex: number, text: string): NotificationPosition => {
     const centerX = containerDimensions.width / 2;
     const centerY = containerDimensions.height / 2;
     const protectedZone = getProtectedZone();
     const notificationSize = estimateNotificationSize(text);
+    const { min: minRadius, max: maxRadius } = getOrbitalRadius();
     
-    // Try multiple positions with increasing radius
-    const baseRadius = getResponsiveRadius();
-    const goldenAngle = 137.5;
+    // Create evenly distributed orbital positions - like a constellation
+    const totalNotifications = notifications.length;
+    const preferredAngle = (notificationIndex * 360) / totalNotifications;
+    const goldenAngle = 137.5; // For secondary positions
     
-    for (let radiusMultiplier = 1; radiusMultiplier <= 2; radiusMultiplier += 0.2) {
-      for (let angleOffset = 0; angleOffset < 360; angleOffset += 30) {
-        const angle = ((notificationIndex * goldenAngle) + angleOffset) % 360;
-        const radius = baseRadius * radiusMultiplier;
+    // Try multiple orbital rings from inner to outer
+    for (let ringNumber = 0; ringNumber < 3; ringNumber++) {
+      const ringRadius = minRadius + (ringNumber * (maxRadius - minRadius) / 3);
+      
+      // Try preferred angle first, then variations
+      for (let angleVariation = 0; angleVariation < 360; angleVariation += 20) {
+        const angle = (preferredAngle + angleVariation + (ringNumber * goldenAngle)) % 360;
         const radian = (angle * Math.PI) / 180;
         
-        const x = centerX + Math.cos(radian) * radius - notificationSize.width / 2;
-        const y = centerY + Math.sin(radian) * radius - notificationSize.height / 2;
+        const x = centerX + Math.cos(radian) * ringRadius - notificationSize.width / 2;
+        const y = centerY + Math.sin(radian) * ringRadius - notificationSize.height / 2;
         
         const candidatePosition: NotificationPosition = {
           x,
@@ -168,10 +177,11 @@ const ScrollytellingSection = () => {
       }
     }
     
-    // Fallback position if no safe spot found
+    // Fallback position if no safe spot found - use minimum orbital radius
+    const fallbackRadius = minRadius;
     return {
-      x: centerX + baseRadius * Math.cos(notificationIndex * 0.5) - notificationSize.width / 2,
-      y: centerY + baseRadius * Math.sin(notificationIndex * 0.5) - notificationSize.height / 2,
+      x: centerX + fallbackRadius * Math.cos(notificationIndex * 0.5) - notificationSize.width / 2,
+      y: centerY + fallbackRadius * Math.sin(notificationIndex * 0.5) - notificationSize.height / 2,
       width: notificationSize.width,
       height: notificationSize.height
     };
@@ -204,7 +214,7 @@ const ScrollytellingSection = () => {
           className="relative w-full h-full flex items-center justify-center px-4 sm:px-6 lg:px-8"
           style={{ 
             minHeight: '100vh',
-            padding: `${getResponsiveRadius() + 100}px 20px`
+            padding: '150px 20px'
           }}
         >
           {/* Main Heading - Always Visible */}
