@@ -45,38 +45,7 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, [toast]);
 
-  // Auto-authenticate when wallet connects
-  useEffect(() => {
-    if (wallet.connected && wallet.publicKey && !user && !loading && isConnecting) {
-      // Small delay to ensure wallet is fully connected
-      setTimeout(async () => {
-        await signInWithWallet();
-        setIsConnecting(false);
-      }, 100);
-    }
-  }, [wallet.connected, wallet.publicKey, user, loading, isConnecting]);
-
-  const connectAndSignIn = useCallback(async (walletName: WalletName) => {
-    try {
-      setIsConnecting(true);
-      
-      // Select and connect to wallet
-      wallet.select(walletName);
-      await wallet.connect();
-      
-      // signInWithWallet will be called automatically by the useEffect above
-    } catch (error) {
-      console.error('Error connecting wallet:', error);
-      toast({
-        title: "Connection failed",
-        description: error instanceof Error ? error.message : "Failed to connect wallet",
-        variant: "destructive",
-      });
-      setIsConnecting(false);
-    }
-  }, [wallet, toast]);
-
-  const signInWithWallet = async () => {
+  const signInWithWallet = useCallback(async () => {
     if (!wallet.connected || !wallet.publicKey) {
       toast({
         title: "Wallet not connected",
@@ -108,7 +77,38 @@ export const useAuth = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [wallet.connected, wallet.publicKey, wallet.signMessage, toast]);
+
+  // Auto-authenticate when wallet connects
+  useEffect(() => {
+    if (wallet.connected && wallet.publicKey && !user && !loading && isConnecting) {
+      // Small delay to ensure wallet is fully connected
+      setTimeout(async () => {
+        await signInWithWallet();
+        setIsConnecting(false);
+      }, 100);
+    }
+  }, [wallet.connected, wallet.publicKey, user, loading, isConnecting, signInWithWallet]);
+
+  const connectAndSignIn = useCallback(async (walletName: WalletName) => {
+    try {
+      setIsConnecting(true);
+      
+      // Select and connect to wallet
+      wallet.select(walletName);
+      await wallet.connect();
+      
+      // signInWithWallet will be called automatically by the useEffect above
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+      toast({
+        title: "Connection failed",
+        description: error instanceof Error ? error.message : "Failed to connect wallet",
+        variant: "destructive",
+      });
+      setIsConnecting(false);
+    }
+  }, [wallet, toast, signInWithWallet]);
 
   const signOut = async () => {
     try {
