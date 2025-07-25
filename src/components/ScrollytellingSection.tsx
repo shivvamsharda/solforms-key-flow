@@ -75,113 +75,40 @@ const ScrollytellingSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [notifications.length]);
 
-  // Get protected "solar zone" around headline
-  const getProtectedZone = () => {
-    if (!headlineRef.current || !containerRef.current) return null;
-    
-    const headlineRect = headlineRef.current.getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-    
-    // Create a large "solar zone" - sacred area around the sun (headline)
+  // Calculate fixed orbital radius outside the protected solar zone
+  const getOrbitalRadius = () => {
     const solarRadius = Math.max(200, containerDimensions.width * 0.15, containerDimensions.height * 0.15);
-    const centerX = (headlineRect.left + headlineRect.right) / 2 - containerRect.left;
-    const centerY = (headlineRect.top + headlineRect.bottom) / 2 - containerRect.top;
-    
-    return {
-      x: centerX - solarRadius,
-      y: centerY - solarRadius,
-      width: solarRadius * 2,
-      height: solarRadius * 2
-    };
-  };
-
-  // Check if two rectangles overlap
-  const checkCollision = (rect1: NotificationPosition, rect2: NotificationPosition) => {
-    return !(rect1.x + rect1.width < rect2.x || 
-             rect2.x + rect2.width < rect1.x || 
-             rect1.y + rect1.height < rect2.y || 
-             rect2.y + rect2.height < rect1.y);
+    const orbitalRadius = solarRadius + 100; // Fixed buffer beyond solar zone
+    return Math.min(orbitalRadius, Math.min(containerDimensions.width, containerDimensions.height) * 0.4);
   };
 
   // Estimate notification dimensions
   const estimateNotificationSize = (text: string) => {
-    const baseWidth = text.length * 8; // Rough estimate
+    const baseWidth = text.length * 8;
     const responsiveWidth = Math.max(80, Math.min(200, baseWidth + 40));
     const responsiveHeight = containerDimensions.width < 640 ? 32 : 40;
-    
     return { width: responsiveWidth, height: responsiveHeight };
   };
 
-  // Get orbital radius - planets must stay outside the solar zone
-  const getOrbitalRadius = () => {
-    // Minimum orbital distance - must be outside the solar zone
-    const solarRadius = Math.max(200, containerDimensions.width * 0.15, containerDimensions.height * 0.15);
-    const minOrbitalRadius = solarRadius + 80; // Buffer beyond solar zone
-    const maxOrbitalRadius = Math.min(containerDimensions.width, containerDimensions.height) * 0.45;
-    
-    return { min: minOrbitalRadius, max: maxOrbitalRadius };
-  };
-
-  // Find collision-free orbital position for each "planet" (notification)
-  const findSafePosition = (notificationIndex: number, text: string): NotificationPosition => {
+  // Calculate exact orbital position for each notification (360° distribution)
+  const calculateOrbitalPosition = (notificationIndex: number, text: string): NotificationPosition => {
     const centerX = containerDimensions.width / 2;
     const centerY = containerDimensions.height / 2;
-    const protectedZone = getProtectedZone();
+    const orbitalRadius = getOrbitalRadius();
     const notificationSize = estimateNotificationSize(text);
-    const { min: minRadius, max: maxRadius } = getOrbitalRadius();
     
-    // Create evenly distributed orbital positions - like a constellation
-    const totalNotifications = notifications.length;
-    const preferredAngle = (notificationIndex * 360) / totalNotifications;
-    const goldenAngle = 137.5; // For secondary positions
+    // Calculate exact angle for perfect 360° distribution
+    const angleIncrement = 360 / notifications.length;
+    const angle = notificationIndex * angleIncrement;
+    const radian = (angle * Math.PI) / 180;
     
-    // Try multiple orbital rings from inner to outer
-    for (let ringNumber = 0; ringNumber < 3; ringNumber++) {
-      const ringRadius = minRadius + (ringNumber * (maxRadius - minRadius) / 3);
-      
-      // Try preferred angle first, then variations
-      for (let angleVariation = 0; angleVariation < 360; angleVariation += 20) {
-        const angle = (preferredAngle + angleVariation + (ringNumber * goldenAngle)) % 360;
-        const radian = (angle * Math.PI) / 180;
-        
-        const x = centerX + Math.cos(radian) * ringRadius - notificationSize.width / 2;
-        const y = centerY + Math.sin(radian) * ringRadius - notificationSize.height / 2;
-        
-        const candidatePosition: NotificationPosition = {
-          x,
-          y,
-          width: notificationSize.width,
-          height: notificationSize.height
-        };
-        
-        // Check boundaries
-        if (x < 20 || y < 20 || 
-            x + notificationSize.width > containerDimensions.width - 20 || 
-            y + notificationSize.height > containerDimensions.height - 20) {
-          continue;
-        }
-        
-        // Check collision with protected zone
-        if (protectedZone && checkCollision(candidatePosition, protectedZone)) {
-          continue;
-        }
-        
-        // Check collision with existing notifications
-        const hasCollision = notificationPositions.slice(0, notificationIndex).some(pos => 
-          checkCollision(candidatePosition, pos)
-        );
-        
-        if (!hasCollision) {
-          return candidatePosition;
-        }
-      }
-    }
+    // Calculate position on the orbital circle
+    const x = centerX + Math.cos(radian) * orbitalRadius - notificationSize.width / 2;
+    const y = centerY + Math.sin(radian) * orbitalRadius - notificationSize.height / 2;
     
-    // Fallback position if no safe spot found - use minimum orbital radius
-    const fallbackRadius = minRadius;
     return {
-      x: centerX + fallbackRadius * Math.cos(notificationIndex * 0.5) - notificationSize.width / 2,
-      y: centerY + fallbackRadius * Math.sin(notificationIndex * 0.5) - notificationSize.height / 2,
+      x,
+      y,
       width: notificationSize.width,
       height: notificationSize.height
     };
@@ -195,7 +122,7 @@ const ScrollytellingSection = () => {
     
     visibleNotifications.forEach((notificationIndex) => {
       const notification = notifications[notificationIndex];
-      const position = findSafePosition(notificationIndex, notification.text);
+      const position = calculateOrbitalPosition(notificationIndex, notification.text);
       newPositions[notificationIndex] = position;
     });
     
