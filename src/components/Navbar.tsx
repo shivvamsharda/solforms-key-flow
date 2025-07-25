@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Wallet } from "lucide-react";
+import { WalletButton } from "@/components/WalletButton";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,10 +44,7 @@ const Navbar = () => {
           </a>
         </div>
 
-        <Button variant="wallet" size="default">
-          <Wallet className="w-4 h-4" />
-          Launch App
-        </Button>
+        <WalletButton />
       </div>
     </nav>
   );
