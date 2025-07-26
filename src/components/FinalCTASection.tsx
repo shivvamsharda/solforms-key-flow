@@ -32,28 +32,6 @@ const FinalCTASection = () => {
           </p>
         </div>
 
-        {/* Decorative elements */}
-        <div className="relative mt-16">
-          <div className="absolute inset-0 bg-gradient-primary opacity-10 rounded-full blur-3xl w-96 h-96 mx-auto"></div>
-          <div className="relative bg-gradient-card rounded-2xl p-8 border border-border shadow-card max-w-2xl mx-auto">
-            <div className="flex items-center justify-center space-x-8">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">10K+</div>
-                <div className="text-muted-foreground text-sm">Forms Created</div>
-              </div>
-              <div className="w-px h-12 bg-border"></div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">1M+</div>
-                <div className="text-muted-foreground text-sm">Encrypted Responses</div>
-              </div>
-              <div className="w-px h-12 bg-border"></div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">99.9%</div>
-                <div className="text-muted-foreground text-sm">Uptime</div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
