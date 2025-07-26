@@ -40,6 +40,8 @@ export default function Dashboard() {
   }, [user, loading, navigate]);
 
   const fetchForms = async () => {
+    if (!user) return;
+    
     try {
       const { data, error } = await supabase
         .from("forms")
@@ -50,6 +52,7 @@ export default function Dashboard() {
           published,
           created_at
         `)
+        .eq("user_id", user.id) // CRITICAL: Only show forms owned by the user
         .order("created_at", { ascending: false });
 
       if (error) throw error;

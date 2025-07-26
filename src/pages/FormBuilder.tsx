@@ -71,14 +71,26 @@ export default function FormBuilder() {
   }, [user, loading, navigate, id, isEditing]);
 
   const loadForm = async () => {
+    if (!user) return;
+    
     try {
+      // CRITICAL: Verify ownership before loading form
       const { data: form, error: formError } = await supabase
         .from("forms")
         .select("*")
         .eq("id", id)
+        .eq("user_id", user.id) // Only allow access to user's own forms
         .single();
 
-      if (formError) throw formError;
+      if (formError) {
+        toast({
+          title: "Access Denied",
+          description: "You don't have permission to edit this form",
+          variant: "destructive",
+        });
+        navigate("/dashboard");
+        return;
+      }
 
       const { data: fields, error: fieldsError } = await supabase
         .from("form_fields")
