@@ -12,3 +12,9 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://web3forms.app/sitemap.xml
+
+# Crawl-delay for general bots
+Crawl-delay: 1
