@@ -7,6 +7,18 @@ interface NotificationPosition {
   height: number;
 }
 
+const notifications = [
+  { text: "PERSONAL PHOTOS" },
+  { text: "BANK CHECKS" },
+  { text: "MEETINGS" },
+  { text: "ADDRESSES" },
+  { text: "COMMERCIAL SECRETS" },
+  { text: "CONTRACTS" },
+  { text: "DOCUMENTS" },
+  { text: "PASSWORD RESET LINKS" },
+  { text: "LINKS TO CLOUD FILES" }
+];
+
 const ScrollytellingSection = () => {
   const [visibleNotifications, setVisibleNotifications] = useState<number[]>([]);
   const [isActive, setIsActive] = useState(false);
@@ -15,18 +27,6 @@ const ScrollytellingSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-
-  const notifications = [
-    { text: "PERSONAL PHOTOS" },
-    { text: "BANK CHECKS" },
-    { text: "MEETINGS" },
-    { text: "ADDRESSES" },
-    { text: "COMMERCIAL SECRETS" },
-    { text: "CONTRACTS" },
-    { text: "DOCUMENTS" },
-    { text: "PASSWORD RESET LINKS" },
-    { text: "LINKS TO CLOUD FILES" }
-  ];
 
 
   // Container resize observer
@@ -135,7 +135,7 @@ const ScrollytellingSection = () => {
     });
     
     setNotificationPositions(newPositions);
-  }, [visibleNotifications, containerDimensions, notifications]);
+  }, [visibleNotifications, containerDimensions]);
 
   return (
     <section 
