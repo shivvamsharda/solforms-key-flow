@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ interface Form {
 
 export default function ResponsesAnalytics() {
   const { id } = useParams<{ id: string }>();
-  const { publicKey } = useWallet();
+  const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
 
   const [form, setForm] = useState<Form | null>(null);
@@ -46,7 +46,7 @@ export default function ResponsesAnalytics() {
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
-    if (!publicKey || !id) return;
+    if (!user || !id) return;
 
     const loadAnalyticsData = async () => {
       try {
@@ -55,7 +55,7 @@ export default function ResponsesAnalytics() {
           .from("forms")
           .select("*")
           .eq("id", id)
-          .eq("user_id", publicKey.toString())
+          .eq("user_id", user.id)
           .single();
 
         if (formError) {
@@ -108,10 +108,10 @@ export default function ResponsesAnalytics() {
     };
 
     loadAnalyticsData();
-  }, [publicKey, id, toast]);
+  }, [user, id, toast]);
 
   // Redirect if not authenticated
-  if (!publicKey) {
+  if (!user) {
     return <Navigate to="/dashboard" replace />;
   }
 
