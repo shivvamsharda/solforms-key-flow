@@ -219,7 +219,7 @@ export default function PublicForm() {
           </RadioGroup>
         );
 
-      case "checkboxes":
+      case "checkbox":
         const checkboxValue = value || [];
         return (
           <div className="space-y-2">
