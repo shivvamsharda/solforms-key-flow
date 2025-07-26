@@ -7,6 +7,7 @@ import { WalletContextProvider } from "@/contexts/WalletContext";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import FormBuilder from "./pages/FormBuilder";
+import ResponsesAnalytics from "./pages/ResponsesAnalytics";
 import PublicForm from "./pages/PublicForm";
 import NotFound from "./pages/NotFound";
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/forms/create" element={<FormBuilder />} />
             <Route path="/forms/:id/edit" element={<FormBuilder />} />
+            <Route path="/forms/:id/responses" element={<ResponsesAnalytics />} />
             <Route path="/form/:formId" element={<PublicForm />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
