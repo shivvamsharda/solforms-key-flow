@@ -24,7 +24,7 @@ const HeroSection = () => {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-accent/10 rounded-full blur-2xl"></div>
       
-      <div className="w-full px-4 lg:px-8 xl:px-12 2xl:px-24 relative z-10 min-h-screen flex items-center overflow-visible">
+      <div className="container mx-auto px-6 xl:px-16 2xl:px-24 relative z-10 min-h-screen flex items-center overflow-visible">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center w-full relative overflow-visible">
           
           {/* Left Content */}
@@ -80,7 +80,7 @@ const HeroSection = () => {
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   </div>
                   <div className="text-sm text-muted-foreground font-mono">
-                    web3forms.app
+                    web3forms.xyz/build
                   </div>
                 </div>
               </div>

@@ -109,37 +109,7 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-  }
-
   body {
     @apply bg-background text-foreground;
-  }
-
-  /* Responsive utilities */
-  .responsive-container {
-    width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    padding-left: clamp(1rem, 5vw, 3rem);
-    padding-right: clamp(1rem, 5vw, 3rem);
-  }
-
-  /* Mobile responsive classes */
-  @media (max-width: 640px) {
-    .hide-on-mobile {
-      display: none !important;
-    }
-  }
-
-  @media (min-width: 1920px) {
-    .ultra-wide-max {
-      max-width: 1800px;
-      margin: 0 auto;
-    }
   }
 }

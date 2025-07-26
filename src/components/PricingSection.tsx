@@ -61,7 +61,7 @@ const PricingSection = () => {
 
   return (
     <section id="pricing" className="py-20 bg-gradient-to-b from-background to-card">
-      <div className="w-full px-4 lg:px-8 xl:px-12">
+      <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Simple, Transparent Pricing

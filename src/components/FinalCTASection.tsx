@@ -4,7 +4,7 @@ import { Wallet, BookOpen } from "lucide-react";
 const FinalCTASection = () => {
   return (
     <section className="py-20 bg-gradient-to-b from-background via-card to-background">
-      <div className="w-full px-4 lg:px-8 xl:px-12">
+      <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
             Ready to reclaim your 
@@ -36,13 +36,21 @@ const FinalCTASection = () => {
         <div className="relative mt-16">
           <div className="absolute inset-0 bg-gradient-primary opacity-10 rounded-full blur-3xl w-96 h-96 mx-auto"></div>
           <div className="relative bg-gradient-card rounded-2xl p-8 border border-border shadow-card max-w-2xl mx-auto">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-foreground mb-2">
-                Join the Future of Decentralized Forms
-              </h3>
-              <p className="text-muted-foreground">
-                Start building privacy-first forms with wallet integration today
-              </p>
+            <div className="flex items-center justify-center space-x-8">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">10K+</div>
+                <div className="text-muted-foreground text-sm">Forms Created</div>
+              </div>
+              <div className="w-px h-12 bg-border"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">1M+</div>
+                <div className="text-muted-foreground text-sm">Encrypted Responses</div>
+              </div>
+              <div className="w-px h-12 bg-border"></div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">99.9%</div>
+                <div className="text-muted-foreground text-sm">Uptime</div>
+              </div>
             </div>
           </div>
         </div>
