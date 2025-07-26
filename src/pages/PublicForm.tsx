@@ -98,6 +98,24 @@ export default function PublicForm() {
     }));
   };
 
+  const uploadFile = async (file: File, fieldId: string, responseId: string): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${fieldId}/${Date.now()}.${fileExt}`;
+    const filePath = `${formId}/${responseId}/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from('form-files')
+      .upload(filePath, file);
+
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('form-files')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
   const submitForm = async () => {
     if (!connected || !publicKey) {
       toast({
@@ -137,17 +155,38 @@ export default function PublicForm() {
 
       if (responseError) throw responseError;
 
-      // Create field responses - only for fields with actual values
-      const fieldResponses = fields
-        .filter(field => {
-          const value = responses[field.id];
-          return value != null && value !== '' && value !== undefined;
-        })
-        .map(field => ({
+      // Process file uploads and prepare field responses
+      const fieldResponses = [];
+      
+      for (const field of fields) {
+        const value = responses[field.id];
+        
+        if (value == null || value === '' || value === undefined) continue;
+        
+        let responseValue = value;
+        
+        // Handle file uploads
+        if (field.field_type === 'file' && value instanceof File) {
+          try {
+            const fileUrl = await uploadFile(value, field.id, responseData.id);
+            responseValue = {
+              filename: value.name,
+              url: fileUrl,
+              size: value.size,
+              type: value.type
+            };
+          } catch (uploadError) {
+            console.error('File upload failed:', uploadError);
+            throw new Error(`Failed to upload file: ${value.name}`);
+          }
+        }
+        
+        fieldResponses.push({
           form_response_id: responseData.id,
           field_id: field.id,
-          response_value: responses[field.id],
-        }));
+          response_value: responseValue,
+        });
+      }
 
       const { error: fieldResponsesError } = await supabase
         .from("field_responses")
@@ -307,6 +346,39 @@ export default function PublicForm() {
               <Label htmlFor={`${field.id}-no`}>No</Label>
             </div>
           </RadioGroup>
+        );
+
+      case "file":
+        return (
+          <div className="space-y-2">
+            <Input
+              type="file"
+              accept="*/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  // Basic file validation
+                  const maxSize = 10 * 1024 * 1024; // 10MB
+                  if (file.size > maxSize) {
+                    toast({
+                      title: "File Too Large",
+                      description: "Please select a file smaller than 10MB",
+                      variant: "destructive",
+                    });
+                    e.target.value = '';
+                    return;
+                  }
+                  handleFieldChange(field.id, file);
+                }
+              }}
+              required={field.required}
+            />
+            {value instanceof File && (
+              <div className="text-sm text-muted-foreground">
+                Selected: {value.name} ({(value.size / 1024 / 1024).toFixed(2)} MB)
+              </div>
+            )}
+          </div>
         );
 
       default:
