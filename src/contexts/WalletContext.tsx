@@ -8,6 +8,7 @@ import {
   TorusWalletAdapter,
   LedgerWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
+import { useRpcEndpoint } from '@/hooks/useRpcEndpoint';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
@@ -16,9 +17,8 @@ interface WalletContextProviderProps {
 }
 
 export const WalletContextProvider: FC<WalletContextProviderProps> = ({ children }) => {
-  // Use mainnet for production payments
-  const endpoint = useMemo(() => clusterApiUrl('mainnet-beta'), []);
-
+  const { data: endpoint, isLoading } = useRpcEndpoint();
+  
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
@@ -28,6 +28,11 @@ export const WalletContextProvider: FC<WalletContextProviderProps> = ({ children
     ],
     []
   );
+
+  // Don't render until we have an endpoint
+  if (isLoading || !endpoint) {
+    return <div>Loading wallet connection...</div>;
+  }
 
   return (
     <ConnectionProvider endpoint={endpoint}>
