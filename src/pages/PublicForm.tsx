@@ -137,12 +137,17 @@ export default function PublicForm() {
 
       if (responseError) throw responseError;
 
-      // Create field responses
-      const fieldResponses = fields.map(field => ({
-        form_response_id: responseData.id,
-        field_id: field.id,
-        response_value: responses[field.id] || null,
-      }));
+      // Create field responses - only for fields with actual values
+      const fieldResponses = fields
+        .filter(field => {
+          const value = responses[field.id];
+          return value != null && value !== '' && value !== undefined;
+        })
+        .map(field => ({
+          form_response_id: responseData.id,
+          field_id: field.id,
+          response_value: responses[field.id],
+        }));
 
       const { error: fieldResponsesError } = await supabase
         .from("field_responses")
