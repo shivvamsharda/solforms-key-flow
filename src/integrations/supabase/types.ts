@@ -243,6 +243,102 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount_sol: number
+          amount_usd: number
+          confirmed_at: string | null
+          created_at: string
+          id: string
+          plan_type: string
+          sol_price_usd: number
+          status: string
+          subscription_id: string | null
+          transaction_hash: string
+          user_id: string
+        }
+        Insert: {
+          amount_sol: number
+          amount_usd: number
+          confirmed_at?: string | null
+          created_at?: string
+          id?: string
+          plan_type: string
+          sol_price_usd: number
+          status?: string
+          subscription_id?: string | null
+          transaction_hash: string
+          user_id: string
+        }
+        Update: {
+          amount_sol?: number
+          amount_usd?: number
+          confirmed_at?: string | null
+          created_at?: string
+          id?: string
+          plan_type?: string
+          sol_price_usd?: number
+          status?: string
+          subscription_id?: string | null
+          transaction_hash?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pricing_cache: {
+        Row: {
+          id: string
+          sol_price_usd: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          sol_price_usd: number
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          sol_price_usd?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          plan_type: string
+          sol_amount_paid: number | null
+          status: string
+          updated_at: string
+          usd_amount_paid: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_type: string
+          sol_amount_paid?: number | null
+          status?: string
+          updated_at?: string
+          usd_amount_paid?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          plan_type?: string
+          sol_amount_paid?: number | null
+          status?: string
+          updated_at?: string
+          usd_amount_paid?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       token_balances: {
         Row: {
           balance: number

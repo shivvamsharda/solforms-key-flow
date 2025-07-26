@@ -1,7 +1,48 @@
 import { Button } from "@/components/ui/button";
-import { Check, Wallet } from "lucide-react";
+import { Check, Wallet, Loader2 } from "lucide-react";
+import { useSolanaPrice } from "@/hooks/useSolanaPrice";
+import { PaymentModal } from "@/components/PaymentModal";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const PricingSection = () => {
+  const { priceUSD, proSOL, enterpriseSOL, loading: priceLoading, error } = useSolanaPrice();
+  const [paymentModal, setPaymentModal] = useState<{
+    isOpen: boolean;
+    planType: 'pro' | 'enterprise';
+    amountUSD: number;
+    amountSOL: number;
+  }>({
+    isOpen: false,
+    planType: 'pro',
+    amountUSD: 50,
+    amountSOL: 0
+  });
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const handlePayment = (planType: 'pro' | 'enterprise') => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in with your wallet to subscribe",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const amountUSD = planType === 'pro' ? 50 : 150;
+    const amountSOL = planType === 'pro' ? proSOL : enterpriseSOL;
+
+    setPaymentModal({
+      isOpen: true,
+      planType,
+      amountUSD,
+      amountSOL
+    });
+  };
+
   const plans = [
     {
       name: "Free",
@@ -21,9 +62,10 @@ const PricingSection = () => {
     },
     {
       name: "Pro",
-      price: "0.5",
+      price: priceLoading ? "..." : proSOL.toString(),
       currency: "SOL",
       period: "/month",
+      usdPrice: 50,
       description: "For serious Web3 builders",
       features: [
         "Unlimited forms",
@@ -40,9 +82,10 @@ const PricingSection = () => {
     },
     {
       name: "Enterprise",
-      price: "Custom",
-      currency: "",
-      period: "",
+      price: priceLoading ? "..." : enterpriseSOL.toString(),
+      currency: "SOL",
+      period: "/month",
+      usdPrice: 150,
       description: "For DAOs and large organizations",
       features: [
         "Everything in Pro",
@@ -98,8 +141,10 @@ const PricingSection = () => {
                 </p>
                 
                 <div className="flex items-center justify-center mb-2">
-                  {plan.price === "Custom" ? (
-                    <span className="text-4xl font-bold text-foreground">Custom</span>
+                  {priceLoading ? (
+                    <div className="flex items-center">
+                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                    </div>
                   ) : (
                     <>
                       <span className="text-4xl font-bold text-foreground">{plan.price}</span>
@@ -107,6 +152,11 @@ const PricingSection = () => {
                     </>
                   )}
                 </div>
+                {plan.usdPrice && (
+                  <div className="text-center text-sm text-muted-foreground mb-2">
+                    ≈ ${plan.usdPrice}/month
+                  </div>
+                )}
                 <span className="text-muted-foreground text-sm">{plan.period}</span>
               </div>
 
@@ -123,8 +173,17 @@ const PricingSection = () => {
                 variant={plan.popular ? "default" : "outline"} 
                 size="lg" 
                 className="w-full"
+                onClick={() => {
+                  if (plan.name === "Free") return;
+                  if (plan.name === "Enterprise") {
+                    handlePayment('enterprise');
+                  } else if (plan.name === "Pro") {
+                    handlePayment('pro');
+                  }
+                }}
+                disabled={plan.name === "Free" || priceLoading}
               >
-                {plan.name === "Enterprise" ? (
+                {plan.name === "Free" ? (
                   plan.cta
                 ) : (
                   <>
@@ -141,7 +200,22 @@ const PricingSection = () => {
           <p className="text-muted-foreground text-sm">
             All plans include wallet-native payments • No credit cards required • Cancel anytime
           </p>
+          {error && (
+            <p className="text-yellow-600 text-xs mt-2">
+              {error} • Prices may be slightly outdated
+            </p>
+          )}
         </div>
+
+        <PaymentModal
+          isOpen={paymentModal.isOpen}
+          onClose={() => setPaymentModal(prev => ({ ...prev, isOpen: false }))}
+          planType={paymentModal.planType}
+          amountUSD={paymentModal.amountUSD}
+          amountSOL={paymentModal.amountSOL}
+          solPriceUSD={priceUSD}
+          userId={user?.id || ''}
+        />
       </div>
     </section>
   );
