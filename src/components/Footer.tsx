@@ -5,11 +5,13 @@ const Footer = () => {
     <footer className="bg-card border-t border-border py-12">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-2 mb-6 md:mb-0">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">S</span>
-            </div>
-            <span className="text-xl font-bold text-foreground">SolForms</span>
+          <div className="flex items-center space-x-3 mb-6 md:mb-0">
+            <img 
+              src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//web3forms_logo_transparent.png" 
+              alt="web3forms logo" 
+              className="w-8 h-8"
+            />
+            <span className="text-xl font-bold text-foreground">web3forms</span>
           </div>
 
           <div className="flex items-center space-x-6 mb-6 md:mb-0">
@@ -40,7 +42,7 @@ const Footer = () => {
           <p className="text-muted-foreground text-sm">
             Powered by <span className="text-accent">Solana</span> • Built with{" "}
             <span className="text-accent">Supabase</span> &{" "}
-            <span className="text-accent">Web3.Storage</span> • © 2025 SolForms
+            <span className="text-accent">Web3.Storage</span> • © 2025 web3forms
           </p>
         </div>
       </div>

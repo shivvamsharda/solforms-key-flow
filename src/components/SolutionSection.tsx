@@ -24,7 +24,7 @@ const SolutionSection = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-            <span className="bg-gradient-primary bg-clip-text text-transparent">SolForms</span> is different.
+            <span className="bg-gradient-primary bg-clip-text text-transparent">web3forms</span> is different.
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Built from the ground up for Web3, prioritizing privacy and wallet-native workflows.

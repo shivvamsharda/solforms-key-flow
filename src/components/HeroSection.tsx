@@ -80,7 +80,7 @@ const HeroSection = () => {
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   </div>
                   <div className="text-sm text-muted-foreground font-mono">
-                    solforms.xyz/build
+                    web3forms.xyz/build
                   </div>
                 </div>
               </div>

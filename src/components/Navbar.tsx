@@ -22,11 +22,13 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">S</span>
-          </div>
-          <span className="text-xl font-bold text-foreground">SolForms</span>
+        <div className="flex items-center space-x-3">
+          <img 
+            src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//web3forms_logo_transparent.png" 
+            alt="web3forms logo" 
+            className="w-8 h-8"
+          />
+          <span className="text-xl font-bold text-foreground">web3forms</span>
         </div>
 
         <div className="hidden md:flex items-center space-x-8">

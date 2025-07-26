@@ -1,7 +1,7 @@
 const TestimonialsSection = () => {
   const testimonials = [
     {
-      quote: "SolForms completely changed how we handle DAO governance. No more email vulnerabilities, just pure wallet-based voting.",
+      quote: "web3forms completely changed how we handle DAO governance. No more email vulnerabilities, just pure wallet-based voting.",
       author: "Alex Chen",
       role: "DAO Coordinator",
       project: "MetaDAO",
@@ -22,7 +22,7 @@ const TestimonialsSection = () => {
       avatar: "MT"
     },
     {
-      quote: "Our whitelist process went from chaotic to streamlined overnight. SolForms made NFT launches so much easier.",
+      quote: "Our whitelist process went from chaotic to streamlined overnight. web3forms made NFT launches so much easier.",
       author: "Emily Wang",
       role: "Founder",
       project: "Solana Monkes",
@@ -52,7 +52,7 @@ const TestimonialsSection = () => {
             Trusted by Web3 Builders
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            See what DAOs, NFT projects, and DeFi protocols are saying about SolForms
+            See what DAOs, NFT projects, and DeFi protocols are saying about web3forms
           </p>
         </div>
 

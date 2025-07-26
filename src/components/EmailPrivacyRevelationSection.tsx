@@ -31,7 +31,7 @@ const EmailPrivacyRevelationSection = () => {
               ,
               <br className="hidden sm:block" />
               <span className="font-bold text-green-400">
-                SolForms
+                web3forms
               </span>{" "}
               prioritizes your{" "}
               <span className="font-bold text-green-400">privacy</span>.

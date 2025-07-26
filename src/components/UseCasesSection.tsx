@@ -42,7 +42,7 @@ const UseCasesSection = () => {
             Built for <span className="bg-gradient-primary bg-clip-text text-transparent">Web3 Workflows</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            From DAO governance to NFT projects, SolForms adapts to your decentralized needs.
+            From DAO governance to NFT projects, web3forms adapts to your decentralized needs.
           </p>
         </div>
 

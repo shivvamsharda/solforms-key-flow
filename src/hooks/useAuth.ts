@@ -57,7 +57,7 @@ export const useAuth = () => {
       setLoading(true);
       const { error } = await supabase.auth.signInWithWeb3({
         chain: 'solana',
-        statement: 'I accept the Terms of Service for SolForms',
+        statement: 'I accept the Terms of Service for web3forms',
         wallet: {
           publicKey: wallet.publicKey,
           signMessage: wallet.signMessage!,

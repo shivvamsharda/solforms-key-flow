@@ -8,7 +8,7 @@ const PricingSection = () => {
       price: "0",
       currency: "SOL",
       period: "forever",
-      description: "Perfect for trying out SolForms",
+      description: "Perfect for trying out web3forms",
       features: [
         "Up to 3 forms",
         "100 responses/month",

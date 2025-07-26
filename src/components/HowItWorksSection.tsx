@@ -32,7 +32,7 @@ const HowItWorksSection = () => {
             How It Works
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Get started with SolForms in four simple steps
+            Get started with web3forms in four simple steps
           </p>
         </div>
 

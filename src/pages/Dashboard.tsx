@@ -91,9 +91,16 @@ export default function Dashboard() {
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              SolForms
-            </h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//web3forms_logo_transparent.png" 
+                alt="web3forms logo" 
+                className="w-8 h-8"
+              />
+              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                web3forms
+              </h1>
+            </div>
             <span className="text-muted-foreground">Dashboard</span>
           </div>
           <WalletButton />
