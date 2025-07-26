@@ -301,34 +301,36 @@ export default function FormBuilder() {
       onDragEnd={handleDragEnd} 
       onDragOver={handleDragOver}
     >
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen w-full bg-background flex flex-col">
         {/* Header */}
-        <header className="border-b border-border bg-card px-4 py-3">
+        <header className="border-b border-border bg-card px-4 lg:px-6 py-3 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 min-w-0 flex-1">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/dashboard")}
+                className="flex-shrink-0"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                <span className="hidden sm:inline">Back</span>
               </Button>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 min-w-0 flex-1">
                 <Input
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="text-lg font-semibold border-none bg-transparent px-0 focus-visible:ring-0"
+                  className="text-lg font-semibold border-none bg-transparent px-0 focus-visible:ring-0 truncate"
                   placeholder="Form Title"
                 />
               </div>
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => {/* TODO: Implement preview */}}
+                className="hidden sm:flex"
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Preview
@@ -358,14 +360,14 @@ export default function FormBuilder() {
         </header>
 
         {/* Main Content */}
-        <div className="flex-1 flex">
-          {/* Question Palette */}
-          <aside className="w-64 border-r border-border bg-card">
+        <div className="flex-1 flex min-h-0">
+          {/* Question Palette - Collapsible on mobile */}
+          <aside className="w-64 lg:w-72 xl:w-80 border-r border-border bg-card flex-shrink-0 hidden md:flex">
             <QuestionPalette onAddQuestion={addQuestion} />
           </aside>
 
-          {/* Form Canvas */}
-          <main className="flex-1 relative">
+          {/* Form Canvas - Flexible width */}
+          <main className="flex-1 min-w-0 relative">
             <FormCanvas
               fields={formData.fields}
               onFieldsChange={(fields) => setFormData(prev => ({ ...prev, fields }))}
@@ -374,8 +376,8 @@ export default function FormBuilder() {
             />
           </main>
 
-          {/* Property Panel */}
-          <aside className="w-80 border-l border-border bg-card">
+          {/* Property Panel - Hide on smaller screens */}
+          <aside className="w-80 xl:w-96 border-l border-border bg-card flex-shrink-0 hidden lg:flex">
             <PropertyPanel
               selectedField={selectedField}
               onFieldUpdate={(updatedField) => {

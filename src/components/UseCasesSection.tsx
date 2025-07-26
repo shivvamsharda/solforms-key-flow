@@ -36,7 +36,7 @@ const UseCasesSection = () => {
 
   return (
     <section id="use-cases" className="py-20 bg-gradient-to-b from-background to-card">
-      <div className="container mx-auto px-6">
+      <div className="w-full px-4 lg:px-8 xl:px-12">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Built for <span className="bg-gradient-primary bg-clip-text text-transparent">Web3 Workflows</span>

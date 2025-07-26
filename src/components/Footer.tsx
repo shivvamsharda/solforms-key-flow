@@ -3,7 +3,7 @@ import { Github, Twitter } from "lucide-react";
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border py-12">
-      <div className="container mx-auto px-6">
+      <div className="w-full px-4 lg:px-8 xl:px-12">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center space-x-3 mb-6 md:mb-0">
             <img 

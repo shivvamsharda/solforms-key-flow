@@ -52,7 +52,7 @@ export function FormCanvas({ fields, onFieldsChange, selectedField, onFieldSelec
     <div className="h-full bg-muted/10">
       <div 
         ref={setNodeRef}
-        className={`max-w-2xl mx-auto p-8 min-h-full ${
+        className={`w-full max-w-4xl mx-auto p-4 lg:p-8 min-h-full ${
           isOver ? 'bg-primary/5 border-2 border-dashed border-primary' : ''
         }`}
       >

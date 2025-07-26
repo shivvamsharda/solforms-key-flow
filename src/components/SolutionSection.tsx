@@ -21,7 +21,7 @@ const SolutionSection = () => {
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-card">
-      <div className="container mx-auto px-6">
+      <div className="w-full px-4 lg:px-8 xl:px-12">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
             <span className="bg-gradient-primary bg-clip-text text-transparent">web3forms</span> is different.

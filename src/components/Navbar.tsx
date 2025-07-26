@@ -21,7 +21,7 @@ const Navbar = () => {
           : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="w-full px-4 lg:px-8 xl:px-12 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <img 
             src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//web3forms_logo_transparent.png" 

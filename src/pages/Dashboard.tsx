@@ -86,30 +86,30 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-full bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+        <div className="w-full px-4 lg:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-4 min-w-0">
             <div className="flex items-center space-x-3">
               <img 
                 src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//web3forms_logo_transparent.png" 
                 alt="web3forms logo" 
-                className="w-8 h-8"
+                className="w-8 h-8 flex-shrink-0"
               />
-              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-xl lg:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 web3forms
               </h1>
             </div>
-            <span className="text-muted-foreground">Dashboard</span>
+            <span className="text-muted-foreground hidden sm:inline">Dashboard</span>
           </div>
           <WalletButton />
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full px-4 lg:px-8 py-6 lg:py-8">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Forms</CardTitle>
@@ -151,11 +151,11 @@ export default function Dashboard() {
         </div>
 
         {/* Forms List */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h2 className="text-xl font-semibold">Your Forms</h2>
           <Button 
             onClick={() => navigate("/forms/create")}
-            className="bg-gradient-primary hover:shadow-glow hover:scale-105"
+            className="bg-gradient-primary hover:shadow-glow hover:scale-105 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create Form
@@ -178,6 +178,7 @@ export default function Dashboard() {
               <Button 
                 onClick={() => navigate("/forms/create")}
                 variant="outline"
+                className="w-full sm:w-auto"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Your First Form
@@ -185,37 +186,38 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
             {forms.map((form) => (
               <Card key={form.id} className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">{form.title}</CardTitle>
-                      <CardDescription className="mt-1">
+                    <div className="min-w-0 flex-1 mr-2">
+                      <CardTitle className="text-lg truncate">{form.title}</CardTitle>
+                      <CardDescription className="mt-1 line-clamp-2">
                         {form.description || "No description"}
                       </CardDescription>
                     </div>
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-1 flex-shrink-0">
                       <div className={`w-2 h-2 rounded-full ${
                         form.published ? 'bg-green-500' : 'bg-yellow-500'
                       }`} />
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {form.published ? 'Published' : 'Draft'}
                       </span>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col gap-3">
                     <span className="text-sm text-muted-foreground">
                       Created {new Date(form.created_at).toLocaleDateString()}
                     </span>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button 
                         size="sm" 
                         variant="outline"
                         onClick={() => navigate(`/forms/${form.id}/edit`)}
+                        className="w-full sm:w-auto"
                       >
                         Edit
                       </Button>
@@ -225,6 +227,7 @@ export default function Dashboard() {
                             size="sm" 
                             variant="outline"
                             onClick={() => navigate(`/forms/${form.id}/responses`)}
+                            className="w-full sm:w-auto"
                           >
                             Responses
                           </Button>
@@ -232,7 +235,7 @@ export default function Dashboard() {
                             size="sm" 
                             variant="outline"
                             onClick={() => openShareModal(form.id)}
-                            className="text-blue-600 hover:text-blue-700"
+                            className="text-blue-600 hover:text-blue-700 w-full sm:w-auto"
                           >
                             <Share2 className="h-3 w-3 mr-1" />
                             Share
