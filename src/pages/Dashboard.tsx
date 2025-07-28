@@ -249,49 +249,47 @@ export default function Dashboard() {
                 
                 <Separator />
                 
-                <CardContent className="pt-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate(`/forms/${form.id}/edit`)}
-                      >
-                        <Edit className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
-                      
-                      {form.published && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => navigate(`/forms/${form.id}/responses`)}
-                        >
-                          <BarChart3 className="w-4 h-4 mr-1" />
-                          Responses
-                        </Button>
-                      )}
-                      
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShareModalForm(form)}
-                      >
-                        <Share2 className="w-4 h-4 mr-1" />
-                        Share
-                      </Button>
-                    </div>
-
+                <CardContent className="pt-4 space-y-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/forms/${form.id}/edit`)}
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
+                    
                     {form.published && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <span className="text-muted-foreground">Accept Responses</span>
-                        <Switch
-                          checked={form.accepting_responses}
-                          onCheckedChange={() => toggleAcceptingResponses(form.id, form.accepting_responses)}
-                        />
-                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(`/forms/${form.id}/responses`)}
+                      >
+                        <BarChart3 className="w-4 h-4 mr-1" />
+                        Responses
+                      </Button>
                     )}
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShareModalForm(form)}
+                    >
+                      <Share2 className="w-4 h-4 mr-1" />
+                      Share
+                    </Button>
                   </div>
+
+                  {form.published && (
+                    <div className="flex items-center justify-between pt-2 border-t border-border">
+                      <span className="text-sm text-muted-foreground">Accept Responses</span>
+                      <Switch
+                        checked={form.accepting_responses}
+                        onCheckedChange={() => toggleAcceptingResponses(form.id, form.accepting_responses)}
+                      />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
