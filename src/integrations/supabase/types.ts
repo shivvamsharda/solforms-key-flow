@@ -200,6 +200,7 @@ export type Database = {
       }
       forms: {
         Row: {
+          accepting_responses: boolean
           created_at: string
           description: string | null
           expires_at: string | null
@@ -214,6 +215,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          accepting_responses?: boolean
           created_at?: string
           description?: string | null
           expires_at?: string | null
@@ -228,6 +230,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          accepting_responses?: boolean
           created_at?: string
           description?: string | null
           expires_at?: string | null

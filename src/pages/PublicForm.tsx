@@ -30,8 +30,10 @@ interface Form {
   description?: string;
   thank_you_message?: string;
   published: boolean;
+  accepting_responses?: boolean;
   expires_at?: string;
   response_limit?: number;
+  notAcceptingResponses?: boolean;
 }
 
 export default function PublicForm() {
@@ -71,6 +73,14 @@ export default function PublicForm() {
       // Check if form is expired
       if (formData.expires_at && new Date(formData.expires_at) < new Date()) {
         throw new Error("This form has expired");
+      }
+
+      // Check if form is accepting responses (unless in preview mode)
+      if (!isPreview && formData.published && !formData.accepting_responses) {
+        setForm({...formData, notAcceptingResponses: true});
+        setFields([]);
+        setIsLoading(false);
+        return;
       }
 
       setForm(formData);
@@ -436,6 +446,25 @@ export default function PublicForm() {
     );
   }
 
+  // Show message when form is not accepting responses
+  if (form?.notAcceptingResponses) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardContent className="text-center py-8">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-red-600 text-2xl">✕</span>
+            </div>
+            <h2 className="text-xl font-semibold mb-2">{form.title}</h2>
+            <p className="text-muted-foreground">
+              This form is no longer accepting responses.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
     return (
       <div className="min-h-screen bg-background py-8">
         <div className="container mx-auto px-4 max-w-2xl">
@@ -502,12 +531,14 @@ export default function PublicForm() {
             <div className="pt-4">
               <Button 
                 onClick={submitForm}
-                disabled={!connected || isSubmitting || isPreview}
+                disabled={!connected || isSubmitting || isPreview || (form && !form.accepting_responses)}
                 className="w-full"
                 size="lg"
               >
                 {isPreview ? (
                   "Preview Mode - Submission Disabled"
+                ) : form && !form.accepting_responses ? (
+                  "Form not accepting responses"
                 ) : isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />

@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, FileText, BarChart3, Settings, Users, Share2 } from "lucide-react";
+import { Plus, FileText, BarChart3, Settings, Users, Share2, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { WalletButton } from "@/components/WalletButton";
 import { ShareModal } from "@/components/ShareModal";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 
 interface Form {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   published: boolean;
+  accepting_responses: boolean;
   created_at: string;
-  _count?: {
-    responses: number;
-  };
+  responses?: { count: number }[];
 }
 
 export default function Dashboard() {
@@ -25,8 +26,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [forms, setForms] = useState<Form[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [selectedFormId, setSelectedFormId] = useState<string>("");
+  const [shareModalForm, setShareModalForm] = useState<Form | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -40,38 +40,72 @@ export default function Dashboard() {
   }, [user, loading, navigate]);
 
   const fetchForms = async () => {
-    if (!user) return;
-    
+    if (!user?.id) return;
+
     try {
       const { data, error } = await supabase
-        .from("forms")
+        .from('forms')
         .select(`
-          id,
-          title,
-          description,
-          published,
-          created_at
+          id, 
+          title, 
+          description, 
+          published, 
+          accepting_responses,
+          created_at,
+          responses:form_responses(count)
         `)
-        .eq("user_id", user.id) // CRITICAL: Only show forms owned by the user
-        .order("created_at", { ascending: false });
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching forms:', error);
+        return;
+      }
+
       setForms(data || []);
     } catch (error) {
-      console.error("Error fetching forms:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load your forms",
-        variant: "destructive",
-      });
+      console.error('Error fetching forms:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const openShareModal = (formId: string) => {
-    setSelectedFormId(formId);
-    setShareModalOpen(true);
+  const toggleAcceptingResponses = async (formId: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('forms')
+        .update({ accepting_responses: !currentStatus })
+        .eq('id', formId);
+
+      if (error) {
+        console.error('Error updating form:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update response settings",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Update local state
+      setForms(forms.map(form => 
+        form.id === formId 
+          ? { ...form, accepting_responses: !currentStatus }
+          : form
+      ));
+
+      toast({
+        title: "Success",
+        description: !currentStatus ? "Form is now accepting responses" : "Form stopped accepting responses",
+      });
+    } catch (error) {
+      console.error('Error updating form:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update response settings",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading || !user) {
@@ -103,7 +137,6 @@ export default function Dashboard() {
             </div>
             <span className="text-muted-foreground">Dashboard</span>
           </div>
-          <WalletButton />
         </div>
       </header>
 
@@ -136,7 +169,9 @@ export default function Dashboard() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                {forms.reduce((total, form) => total + (form.responses?.[0]?.count || 0), 0)}
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -187,59 +222,75 @@ export default function Dashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {forms.map((form) => (
-              <Card key={form.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+              <Card key={form.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">{form.title}</CardTitle>
-                      <CardDescription className="mt-1">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg mb-1">{form.title}</CardTitle>
+                      <CardDescription>
                         {form.description || "No description"}
                       </CardDescription>
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <div className={`w-2 h-2 rounded-full ${
-                        form.published ? 'bg-green-500' : 'bg-yellow-500'
-                      }`} />
-                      <span className="text-xs text-muted-foreground">
-                        {form.published ? 'Published' : 'Draft'}
-                      </span>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-muted-foreground">
-                      Created {new Date(form.created_at).toLocaleDateString()}
-                    </span>
-                    <div className="flex space-x-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => navigate(`/forms/${form.id}/edit`)}
-                      >
-                        Edit
-                      </Button>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={form.published ? "default" : "secondary"}>
+                        {form.published ? "Published" : "Draft"}
+                      </Badge>
                       {form.published && (
-                        <>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => navigate(`/forms/${form.id}/responses`)}
-                          >
-                            Responses
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => openShareModal(form.id)}
-                            className="text-blue-600 hover:text-blue-700"
-                          >
-                            <Share2 className="h-3 w-3 mr-1" />
-                            Share
-                          </Button>
-                        </>
+                        <Badge variant={form.accepting_responses ? "default" : "destructive"}>
+                          {form.accepting_responses ? "Accepting" : "Closed"}
+                        </Badge>
                       )}
                     </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Created {new Date(form.created_at).toLocaleDateString()}
+                  </p>
+                </CardHeader>
+                
+                <Separator />
+                
+                <CardContent className="pt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(`/forms/${form.id}/edit`)}
+                      >
+                        <Edit className="w-4 h-4 mr-1" />
+                        Edit
+                      </Button>
+                      
+                      {form.published && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/forms/${form.id}/responses`)}
+                        >
+                          <BarChart3 className="w-4 h-4 mr-1" />
+                          Responses
+                        </Button>
+                      )}
+                      
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShareModalForm(form)}
+                      >
+                        <Share2 className="w-4 h-4 mr-1" />
+                        Share
+                      </Button>
+                    </div>
+
+                    {form.published && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className="text-muted-foreground">Accept Responses</span>
+                        <Switch
+                          checked={form.accepting_responses}
+                          onCheckedChange={() => toggleAcceptingResponses(form.id, form.accepting_responses)}
+                        />
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -249,11 +300,13 @@ export default function Dashboard() {
       </div>
 
       {/* Share Modal */}
-      <ShareModal 
-        formId={selectedFormId}
-        isOpen={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-      />
+      {shareModalForm && (
+        <ShareModal 
+          formId={shareModalForm.id}
+          isOpen={!!shareModalForm}
+          onClose={() => setShareModalForm(null)}
+        />
+      )}
     </div>
   );
 }
