@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Save, Eye, Settings, ArrowLeft } from "lucide-react";
+import { Save, Eye, Settings, ArrowLeft, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -210,6 +210,66 @@ export default function FormBuilder() {
     }
   };
 
+  const publishForm = async () => {
+    if (!user || !formData.id) {
+      toast({
+        title: "Error",
+        description: "Please save the form first before publishing",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.fields.length === 0) {
+      toast({
+        title: "Cannot Publish",
+        description: "Add at least one field before publishing your form",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("forms")
+        .update({ published: true })
+        .eq("id", formData.id)
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Form Published!",
+        description: "Your form is now live and ready to share",
+      });
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error publishing form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to publish form",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const previewForm = () => {
+    if (!formData.id) {
+      toast({
+        title: "Save Required",
+        description: "Please save the form first before previewing",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    window.open(`/form/${formData.id}?preview=true`, '_blank');
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -325,10 +385,23 @@ export default function FormBuilder() {
             </div>
             
             <div className="flex items-center space-x-2">
+              {formData.id && !formData.published && formData.fields.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={publishForm}
+                  disabled={isSaving}
+                  className="text-green-600 border-green-600 hover:bg-green-50"
+                >
+                  <Share className="w-4 h-4 mr-2" />
+                  Publish
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => {/* TODO: Implement preview */}}
+                onClick={previewForm}
+                disabled={!formData.id}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Preview

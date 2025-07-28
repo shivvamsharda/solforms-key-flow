@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,8 @@ interface Form {
 
 export default function PublicForm() {
   const { formId } = useParams<{ formId: string }>();
+  const [searchParams] = useSearchParams();
+  const isPreview = searchParams.get('preview') === 'true';
   const [form, setForm] = useState<Form | null>(null);
   const [fields, setFields] = useState<FormField[]>([]);
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -52,13 +54,17 @@ export default function PublicForm() {
 
   const loadForm = async () => {
     try {
-      // Load form details
-      const { data: formData, error: formError } = await supabase
+      // Load form details - allow unpublished forms in preview mode
+      const query = supabase
         .from("forms")
         .select("*")
-        .eq("id", formId)
-        .eq("published", true)
-        .single();
+        .eq("id", formId);
+      
+      if (!isPreview) {
+        query.eq("published", true);
+      }
+      
+      const { data: formData, error: formError } = await query.single();
 
       if (formError) throw formError;
 
@@ -430,20 +436,27 @@ export default function PublicForm() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">{form.title}</CardTitle>
-            {form.description && (
-              <p className="text-muted-foreground mt-2">{form.description}</p>
-            )}
-          </CardHeader>
+    return (
+      <div className="min-h-screen bg-background py-8">
+        <div className="container mx-auto px-4 max-w-2xl">
+          {isPreview && (
+            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">
+                📝 Preview Mode - This form is not yet published
+              </p>
+            </div>
+          )}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">{form.title}</CardTitle>
+              {form.description && (
+                <p className="text-muted-foreground mt-2">{form.description}</p>
+              )}
+            </CardHeader>
           
           <CardContent className="space-y-6">
             {/* Wallet Connection Banner */}
-            {!connected && (
+            {!connected && !isPreview && (
               <div className="p-4 border border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800 rounded-lg">
                 <div className="flex items-center gap-3">
                   <Wallet className="h-5 w-5 text-yellow-600" />
@@ -459,6 +472,15 @@ export default function PublicForm() {
                 <div className="mt-3">
                   <WalletMultiButton />
                 </div>
+              </div>
+            )}
+
+            {/* Preview mode wallet notice */}
+            {isPreview && (
+              <div className="p-4 border border-blue-200 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800 rounded-lg">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  💡 In preview mode, wallet connection and form submission are disabled
+                </p>
               </div>
             )}
 
@@ -480,11 +502,13 @@ export default function PublicForm() {
             <div className="pt-4">
               <Button 
                 onClick={submitForm}
-                disabled={!connected || isSubmitting}
+                disabled={!connected || isSubmitting || isPreview}
                 className="w-full"
                 size="lg"
               >
-                {isSubmitting ? (
+                {isPreview ? (
+                  "Preview Mode - Submission Disabled"
+                ) : isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     Submitting...
