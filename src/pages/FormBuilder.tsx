@@ -257,18 +257,6 @@ export default function FormBuilder() {
     }
   };
 
-  const previewForm = () => {
-    if (!formData.id) {
-      toast({
-        title: "Save Required",
-        description: "Please save the form first before previewing",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    window.open(`/form/${formData.id}?preview=true`, '_blank');
-  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -397,15 +385,6 @@ export default function FormBuilder() {
                   Publish
                 </Button>
               )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={previewForm}
-                disabled={!formData.id}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
-              </Button>
               <Button
                 size="sm"
                 onClick={saveForm}
