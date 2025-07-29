@@ -91,9 +91,9 @@ const HowItWorksSection = () => {
                   <video 
                     className="w-full h-auto rounded-lg"
                     controls
-                    poster=""
+                    preload="metadata"
                   >
-                    <source src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//video-output-3A9E34C9-20D0-4873-94B6-D5AEAF406D98-1.mov" type="video/quicktime" />
+                    <source src="https://sszxqukimsedglqwkneg.supabase.co/storage/v1/object/public/form-files//video-output-3A9E34C9-20D0-4873-94B6-D5AEAF406D98-1.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 </div>
