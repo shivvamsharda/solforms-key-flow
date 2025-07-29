@@ -82,12 +82,9 @@ const HowItWorksSection = () => {
                   <h3 className="text-2xl font-bold text-foreground mb-4">
                     See it in action
                   </h3>
-                  <p className="text-muted-foreground mb-6">
+                  <p className="text-muted-foreground">
                     Watch how easy it is to create a token-gated form and start collecting encrypted responses.
                   </p>
-                  <button className="text-primary hover:text-primary-glow transition-colors font-medium">
-                    Watch Demo →
-                  </button>
                 </div>
                 
                 <div className="bg-muted rounded-lg overflow-hidden">
