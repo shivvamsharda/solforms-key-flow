@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Wallet, ArrowRight, Plus, Type, CheckSquare, Lock, Zap, Shield } from "lucide-react";
+import { Wallet, ArrowRight, Plus, Type, CheckSquare, Lock, Zap, Shield, Twitter, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import mobileMockup from "/lovable-uploads/a4d4dfe7-fe2e-4199-9a9c-a6b34ae304f3.png";
@@ -60,9 +60,29 @@ const HeroSection = () => {
                 <Shield className="w-5 h-5 text-primary" />
                 <span className="text-sm text-muted-foreground">End-to-end encrypted</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-accent" />
-                <span className="text-sm text-muted-foreground">Instant setup</span>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-accent" />
+                  <span className="text-sm text-muted-foreground">Instant setup</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a 
+                    href="https://x.com/web3formsapp" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Twitter className="w-4 h-4" />
+                  </a>
+                  <a 
+                    href="http://t.me/web3formsapp" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
