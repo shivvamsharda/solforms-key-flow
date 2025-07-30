@@ -1,4 +1,4 @@
-import { Github, Twitter } from "lucide-react";
+import { MessageCircle, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -16,24 +16,22 @@ const Footer = () => {
 
           <div className="flex items-center space-x-6 mb-6 md:mb-0">
             <a 
-              href="#" 
+              href="https://x.com/web3formsapp" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Twitter"
             >
               <Twitter className="w-5 h-5" />
             </a>
             <a 
-              href="#" 
+              href="http://t.me/web3formsapp" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="GitHub"
+              aria-label="Telegram"
             >
-              <Github className="w-5 h-5" />
-            </a>
-            <a 
-              href="#docs" 
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Docs
+              <MessageCircle className="w-5 h-5" />
             </a>
           </div>
         </div>

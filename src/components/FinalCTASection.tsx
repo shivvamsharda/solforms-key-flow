@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Wallet, BookOpen } from "lucide-react";
+import { Wallet } from "lucide-react";
 
 const FinalCTASection = () => {
   return (
@@ -20,10 +20,6 @@ const FinalCTASection = () => {
             <Button variant="hero" size="xl" className="w-full sm:w-auto">
               <Wallet className="w-5 h-5" />
               Create Your First Form
-            </Button>
-            <Button variant="outline" size="xl" className="w-full sm:w-auto">
-              <BookOpen className="w-5 h-5" />
-              Read the Docs
             </Button>
           </div>
           

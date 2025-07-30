@@ -40,9 +40,6 @@ const Navbar = () => {
           <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
             Pricing
           </a>
-          <a href="#docs" className="text-muted-foreground hover:text-foreground transition-colors">
-            Docs
-          </a>
         </div>
 
         <WalletButton />
